@@ -7,8 +7,8 @@
 
 const app = {
   app_id: 102110,
-  title: 'My Awesome E-Com Plus App',
-  slug: 'my-awesome-app',
+  title: 'Ideris',
+  slug: 'ideris',
   type: 'external',
   state: 'active',
   authentication: true,
@@ -54,9 +54,9 @@ const app = {
       'POST'           // Create procedures to receive webhooks
     ],
     products: [
-      // 'GET',           // Read products with public and private fields
-      // 'POST',          // Create products
-      // 'PATCH',         // Edit products
+      'GET',           // Read products with public and private fields
+      'POST',          // Create products
+      'PATCH',         // Edit products
       // 'PUT',           // Overwrite products
       // 'DELETE',        // Delete products
     ],
@@ -82,9 +82,9 @@ const app = {
       // 'DELETE',        // Delete customers
     ],
     orders: [
-      // 'GET',           // List/read orders with public and private fields
-      // 'POST',          // Create orders
-      // 'PATCH',         // Edit orders
+      'GET',           // List/read orders with public and private fields
+      'POST',          // Create orders
+      'PATCH',         // Edit orders
       // 'PUT',           // Overwrite orders
       // 'DELETE',        // Delete orders
     ],
@@ -101,12 +101,12 @@ const app = {
      */
     'orders/fulfillments': [
       // 'GET',           // List/read order fulfillment and tracking events
-      // 'POST',          // Create fulfillment event with new status
+      'POST',          // Create fulfillment event with new status
       // 'DELETE',        // Delete fulfillment event
     ],
     'orders/payments_history': [
       // 'GET',           // List/read order payments history events
-      // 'POST',          // Create payments history entry with new status
+      'POST',          // Create payments history entry with new status
       // 'DELETE',        // Delete payments history entry
     ],
 
