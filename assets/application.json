@@ -15,28 +15,39 @@
     ],
     "products": [
       "GET",
-      "POST",
-      "PATCH"
+      "POST"
     ],
     "brands": [],
     "categories": [],
     "customers": [],
     "orders": [
-      "GET",
-      "POST",
-      "PATCH"
+      "GET"
     ],
     "carts": [],
-    "orders/fulfillments": [
+    "orders/fulfillments": [],
+    "orders/payments_history": [],
+    "products/inventory_records": [
       "POST"
     ],
-    "orders/payments_history": [
-      "POST"
+    "products/quantity": [
+      "PUT"
     ],
-    "products/quantity": [],
-    "products/variations/quantity": [],
+    "products/variations/quantity": [
+      "PUT"
+    ],
     "products/price": [],
     "products/variations/price": []
+  },
+  "admin_settings": {
+    "ideris_login_token": {
+      "schema": {
+        "type": "string",
+        "maxLength": 255,
+        "title": "Token da API Ideris",
+        "description": "https://suporte.ideris.com.br/portal/pt/kb/articles/como-gerar-token-da-api-p%C3%BAblica-do-ideris"
+      },
+      "hide": true
+    }
   },
   "auth_callback_uri": "https://us-central1-ecom-ideris.cloudfunctions.net/app/ecom/auth-callback",
   "version": "1.0.0"
