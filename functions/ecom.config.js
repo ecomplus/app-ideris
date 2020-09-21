@@ -175,6 +175,7 @@ procedures.push({
       resource: 'orders',
       action: 'create',
     },
+    */
 
     // Receive notifications when order financial/fulfillment status changes:
     {
@@ -185,7 +186,6 @@ procedures.push({
       resource: 'orders',
       field: 'fulfillment_status',
     },
-    */
 
     // Receive notifications when products/variations stock quantity changes:
     {

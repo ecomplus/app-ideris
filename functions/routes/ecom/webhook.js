@@ -31,6 +31,7 @@ exports.post = ({ appSdk }, req, res) => {
       }
 
       /* DO YOUR CUSTOM STUFF HERE */
+      console.log(trigger)
 
       // all done
       res.send(ECHO_SUCCESS)
