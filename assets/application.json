@@ -47,6 +47,135 @@
         "description": "https://suporte.ideris.com.br/portal/pt/kb/articles/como-gerar-token-da-api-p%C3%BAblica-do-ideris"
       },
       "hide": true
+    },
+    "automations": {
+      "schema": {
+        "title": "Automações",
+        "description": "Sincronizações automáticas entre E-Com Plus e Ideris",
+        "type": "object",
+        "properties": {
+          "new_products": {
+            "type": "boolean",
+            "default": false,
+            "title": "Exportar novos produtos"
+          },
+          "new_orders": {
+            "type": "boolean",
+            "default": true,
+            "title": "Exportar novos pedidos"
+          },
+          "update_quantity": {
+            "type": "boolean",
+            "default": true,
+            "title": "Exportar estoques",
+            "description": "Atualizar estoques de produtos exportados"
+          },
+          "update_price": {
+            "type": "boolean",
+            "default": false,
+            "title": "Exportar preços",
+            "description": "Atualizar preços de produtos exportados"
+          },
+          "sync_quantity": {
+            "type": "boolean",
+            "default": true,
+            "title": "Sincronizar estoques",
+            "description": "Importar estoques após pedidos novos ou atualizados no Ideris"
+          }
+        }
+      },
+      "hide": true
+    },
+    "exportation": {
+      "schema": {
+        "title": "Exportação manual",
+        "description": "Fila a exportar para o Ideris, serão removidos automaticamente após exportação",
+        "type": "object",
+        "properties": {
+          "product_ids": {
+            "title": "Produtos a exportar",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$",
+              "title": "ID do produto"
+            }
+          },
+          "order_ids": {
+            "title": "Pedidos a exportar",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$",
+              "title": "ID do pedido"
+            }
+          }
+        }
+      },
+      "hide": false
+    },
+    "importation": {
+      "schema": {
+        "title": "Importação manual",
+        "description": "Fila a importar do Ideris, serão removidos automaticamente após importação",
+        "type": "object",
+        "properties": {
+          "quantity_skus": {
+            "title": "Estoques a importar",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 255,
+              "title": "SKU do produto"
+            }
+          }
+        }
+      },
+      "hide": false
+    },
+    "logs": {
+      "schema": {
+        "title": "Logs",
+        "type": "array",
+        "maxItems": 300,
+        "items": {
+          "title": "Registro de log",
+          "type": "object",
+          "properties": {
+            "resource": {
+              "type": "string",
+              "maxLength": 255,
+              "title": "Recurso"
+            },
+            "resource_id": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$",
+              "title": "ID do recurso"
+            },
+            "ideris_id": {
+              "type": "string",
+              "maxLength": 255,
+              "title": "ID do recurso no Ideris"
+            },
+            "timestamp": {
+              "type": "string",
+              "format": "date-time",
+              "title": "Horário"
+            },
+            "success": {
+              "type": "boolean",
+              "default": true,
+              "title": "Sucesso"
+            },
+            "notes": {
+              "type": "string",
+              "maxLength": 5000,
+              "title": "Notas"
+            }
+          }
+        }
+      },
+      "hide": true
     }
   },
   "auth_callback_uri": "https://us-central1-ecom-ideris.cloudfunctions.net/app/ecom/auth-callback",
