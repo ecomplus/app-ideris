@@ -31,7 +31,8 @@ exports.post = ({ appSdk }, req, res) => {
       }
 
       /* DO YOUR CUSTOM STUFF HERE */
-      console.log(trigger)
+      const resourceId = trigger.resource_id || trigger.inserted_id
+      console.log(`> Webhook #${storeId} ${resourceId} [${trigger.resource}]`)
 
       // all done
       res.send(ECHO_SUCCESS)
