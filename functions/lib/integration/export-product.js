@@ -14,7 +14,7 @@ module.exports = ({ appSdk, storeId }, iderisLoginToken, queueEntry, iderisProdu
     .then(({ data }) => {
       const product = data
       const ideris = new Ideris(iderisLoginToken)
-      const job = ideris.starting.then(() => {
+      const job = ideris.preparing.then(() => {
         return ideris.axios.get(`/Produto/?sku=${product.sku}`).then(({ data }) => {
           if (Array.isArray(data.result)) {
             const iderisProduct = data.result.find(({ sku }) => sku === product.sku)
