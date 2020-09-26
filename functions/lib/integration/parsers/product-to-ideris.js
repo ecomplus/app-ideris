@@ -1,6 +1,12 @@
 const ecomUtils = require('@ecomplus/utils')
 
 module.exports = (product, iderisProductPayload) => {
+  let descricaoLonga = product.body_text || product.body_html
+  if (descricaoLonga) {
+    descricaoLonga = descricaoLonga.substring(0, 5000)
+  } else {
+    descricaoLonga = product.short_description || product.name
+  }
   const iderisProduct = {
     categoriaIdIderis: 1,
     subCategoriaIdIderis: 1,
@@ -10,7 +16,7 @@ module.exports = (product, iderisProductPayload) => {
     ...iderisProductPayload,
     sku: product.sku,
     titulo: ecomUtils.name(product, 'pt_br'),
-    descricaoLonga: product.body_text || product.body_html || product.short_description || product.name,
+    descricaoLonga,
     valorCusto: product.cost_price || 1,
     valorVenda: ecomUtils.price(product),
     quantidadeEstoquePrincipal: product.quantity
