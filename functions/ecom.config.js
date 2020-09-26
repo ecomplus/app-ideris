@@ -161,11 +161,6 @@ const app = {
             default: false,
             title: 'Exportar novos produtos'
           },
-          new_orders: {
-            type: 'boolean',
-            default: true,
-            title: 'Exportar novos pedidos'
-          },
           update_quantity: {
             type: 'boolean',
             default: true,
@@ -368,16 +363,22 @@ procedures.push({
     {
       resource: 'products',
       subresource: 'variations',
-      field: 'quantity'
+      field: 'quantity',
     },
     {
       resource: 'products',
-      field: 'price'
+      field: 'price',
     },
     {
       resource: 'products',
       subresource: 'variations',
-      field: 'price'
+      field: 'price',
+    },
+
+    // Receive notifications when new product is created:
+    {
+      resource: 'products',
+      action: 'create',
     },
 
     /* Receive notifications when cart is edited:
