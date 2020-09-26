@@ -63,7 +63,7 @@ exports.post = ({ appSdk }, req, res) => {
                     return integrationHandlers[queue](
                       { appSdk, storeId },
                       iderisLoginToken,
-                      nextId,
+                      { action, queue, nextId },
                       appData.ideris_product_data
                     ).then(() => ({ appData, action, queue }))
                   }
