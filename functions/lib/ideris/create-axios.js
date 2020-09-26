@@ -8,7 +8,7 @@ module.exports = accessToken => {
   if (accessToken) {
     headers.Authorization = accessToken
   }
-  axios.create({
+  return axios.create({
     baseURL: 'http://api.ideris.com.br/',
     headers
   })
