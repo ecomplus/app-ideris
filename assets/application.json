@@ -48,36 +48,30 @@
       },
       "hide": true
     },
-    "automations": {
+    "new_products": {
       "schema": {
-        "title": "Automações",
-        "description": "Sincronizações automáticas entre E-Com Plus e Ideris",
-        "type": "object",
-        "properties": {
-          "new_products": {
-            "type": "boolean",
-            "default": false,
-            "title": "Exportar novos produtos"
-          },
-          "update_quantity": {
-            "type": "boolean",
-            "default": true,
-            "title": "Exportar estoques",
-            "description": "Atualizar estoques de produtos exportados"
-          },
-          "update_price": {
-            "type": "boolean",
-            "default": false,
-            "title": "Exportar preços",
-            "description": "Atualizar preços de produtos exportados"
-          },
-          "sync_quantity": {
-            "type": "boolean",
-            "default": true,
-            "title": "Sincronizar estoques",
-            "description": "Importar estoques após pedidos novos ou atualizados no Ideris"
-          }
-        }
+        "type": "boolean",
+        "default": false,
+        "title": "Exportar novos produtos",
+        "description": "Criar novos produtos no Ideris automaticamente"
+      },
+      "hide": true
+    },
+    "update_quantity": {
+      "schema": {
+        "type": "boolean",
+        "default": true,
+        "title": "Exportar estoques",
+        "description": "Atualizar estoques no Ideris automaticamente"
+      },
+      "hide": true
+    },
+    "update_price": {
+      "schema": {
+        "type": "boolean",
+        "default": false,
+        "title": "Exportar preços",
+        "description": "Atualizar preços no Ideris automaticamente"
       },
       "hide": true
     },
