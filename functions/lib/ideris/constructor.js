@@ -21,7 +21,7 @@ module.exports = function (loginToken, firestoreColl = 'ideris_tokens') {
       console.log('> Ideris login')
       login(loginToken)
         .then(accessToken => {
-          console.log(`> New Ideris token ${accessToken}`)
+          console.log(`> Ideris token ${accessToken}`)
           authenticate(accessToken)
           if (documentRef) {
             documentRef.set({ accessToken }).catch(console.error)
