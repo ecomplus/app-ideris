@@ -51,17 +51,17 @@ exports.post = ({ appSdk }, req, res) => {
         const iderisLoginToken = appData.ideris_login_token
         if (typeof iderisLoginToken === 'string' && iderisLoginToken) {
           if (trigger.resource === 'applications') {
-            const actions = ['exportation', 'importation']
+            const actions = Object.keys(integrationHandlers)
             for (let i = 0; i < actions.length; i++) {
               const action = actions[i]
               if (typeof appData[action] === 'object' && appData[action]) {
                 const queue = Object.keys(appData[action])[0]
                 const ids = appData[action][queue]
-                if (Array.isArray(ids) && integrationHandlers[queue]) {
+                if (Array.isArray(ids) && integrationHandlers[action][queue]) {
                   const nextId = ids[0]
                   if (typeof nextId === 'string' && nextId.length) {
                     console.log(`> Starting ${action}`)
-                    return integrationHandlers[queue](
+                    return integrationHandlers[action][queue](
                       { appSdk, storeId },
                       iderisLoginToken,
                       { action, queue, nextId },
@@ -73,7 +73,7 @@ exports.post = ({ appSdk }, req, res) => {
             }
           }
         }
-        console.log('> Skip webhook:', JSON.stringify(appData))
+        // console.log('> Skip webhook:', JSON.stringify(appData))
 
         // nothing to do
         return {}
