@@ -14,23 +14,25 @@ module.exports = ({ appSdk, storeId }, iderisLoginToken, queueEntry, iderisProdu
     .then(({ data }) => {
       const product = data
       const ideris = new Ideris(iderisLoginToken)
-      const job = ideris.preparing.then(() => {
-        return ideris.axios.get(`/Produto/?sku=${product.sku}`).then(({ data }) => {
-          if (Array.isArray(data.result)) {
-            const iderisProduct = data.result.find(({ sku }) => sku === product.sku)
-            let method
-            if (iderisProduct) {
-              iderisProductPayload = {
-                id: iderisProduct.id
+      const job = ideris.preparing
+        .then(() => {
+          return ideris.axios.get(`/Produto/?sku=${product.sku}`).then(({ data }) => {
+            if (Array.isArray(data.result)) {
+              const iderisProduct = data.result.find(({ sku }) => sku === product.sku)
+              let method
+              if (iderisProduct) {
+                iderisProductPayload = {
+                  id: iderisProduct.id
+                }
+                method = 'put'
+              } else {
+                method = 'post'
               }
-              method = 'put'
-            } else {
-              method = 'post'
+              return ideris.axios[method]('/Produto', parseProduct(product, iderisProductPayload))
             }
-            return ideris.axios[method]('/Produto', parseProduct(product, iderisProductPayload))
-          }
+          })
         })
-      })
+        .catch(console.error)
       handleJob({ appSdk, storeId }, queueEntry, job)
     })
 

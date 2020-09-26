@@ -18,6 +18,7 @@ module.exports = function (loginToken, firestoreColl = 'ideris_tokens') {
     }
 
     const handleLogin = () => {
+      console.log('> Ideris login')
       login(loginToken)
         .then(accessToken => {
           console.log(`> New Ideris token ${accessToken}`)
