@@ -202,15 +202,6 @@ const app = {
               pattern: '^[a-f0-9]{24}$',
               title: 'ID do produto'
             }
-          },
-          order_ids: {
-            title: 'Pedidos a exportar',
-            type: 'array',
-            items: {
-              type: 'string',
-              pattern: '^[a-f0-9]{24}$',
-              title: 'ID do pedido'
-            }
           }
         }
       },
@@ -222,18 +213,71 @@ const app = {
         description: 'Fila a importar do Ideris, serão removidos automaticamente após importação',
         type: 'object',
         properties: {
-          quantity_skus: {
-            title: 'Estoques a importar',
+          skus: {
+            title: 'Produtos a importar',
             type: 'array',
             items: {
               type: 'string',
-              maxLength: 255,
-              title: 'SKU do produto'
+              title: 'SKU do produto no Ideris'
+            }
+          },
+          order_ids: {
+            title: 'Pedidos a importar',
+            type: 'array',
+            items: {
+              type: 'string',
+              title: 'ID do pedido no Ideris'
             }
           }
         }
       },
       hide: false
+    },
+    ideris_product_data: {
+      schema: {
+        title: 'Configuração para novos produtos no Ideris',
+        description: 'IDs pré-definidos para produtos exportados da plataforma para o Ideris',
+        type: 'object',
+        properties: {
+          categoriaIdIderis: {
+            type: 'integer',
+            minimum: 1,
+            maximum: 999999,
+            default: 1,
+            title: 'Categoria no Ideris'
+          },
+          subCategoriaIdIderis: {
+            type: 'integer',
+            minimum: 1,
+            maximum: 999999,
+            default: 1,
+            title: 'Subcategoria no Ideris'
+          },
+          marcaIdIderis: {
+            type: 'integer',
+            minimum: 1,
+            maximum: 999999,
+            default: 1,
+            title: 'Marca no Ideris'
+          },
+          departamentoIdIderis: {
+            type: 'integer',
+            minimum: 1,
+            maximum: 999999,
+            default: 8,
+            title: 'Departamento no Ideris'
+          },
+          categoriaML: {
+            type: 'string',
+            minLength: 4,
+            maxLength: 12,
+            default: 'MLB3530',
+            title: 'ID da categoria no ML',
+            description: 'Categoria do Mercado Livre conforme https://api.mercadolibre.com/sites/MLB/categories'
+          }
+        }
+      },
+      hide: true
     },
     logs: {
       schema: {
