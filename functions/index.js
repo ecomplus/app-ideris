@@ -131,6 +131,6 @@ console.log(`-- Starting '${app.title}' E-Com Plus app with Function '${function
 
 // schedule sync from Ideris API to local Firestore and Store API
 const syncFromIderis = require('./lib/integration/sync-from-ideris')
-const cron = 'every 1 mins'
+const cron = 'every 3 mins'
 exports.scheduledSync = functions.pubsub.schedule(cron).onRun(syncFromIderis)
 console.log(`-- Sheduled active sync from Ideris API '${cron}'`)
