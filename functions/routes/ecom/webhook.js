@@ -50,13 +50,39 @@ exports.post = ({ appSdk }, req, res) => {
 
         const iderisLoginToken = appData.ideris_login_token
         if (typeof iderisLoginToken === 'string' && iderisLoginToken) {
-          if (trigger.resource === 'applications') {
+          let integrationConfig
+          switch (trigger.resource) {
+            case 'applications':
+              integrationConfig = appData
+              break
+            case 'products':
+              if (trigger.body) {
+                if (trigger.action === 'create') {
+                  if (!appData.new_products) {
+                    break
+                  }
+                } else if (
+                  (!trigger.body.quantity || !appData.update_quantity) &&
+                  (!trigger.body.price || !appData.update_price)
+                ) {
+                  break
+                }
+                integrationConfig = {
+                  exportation: {
+                    product_ids: [resourceId]
+                  }
+                }
+              }
+              break
+          }
+
+          if (integrationConfig) {
             const actions = Object.keys(integrationHandlers)
             for (let i = 0; i < actions.length; i++) {
               const action = actions[i]
-              if (typeof appData[action] === 'object' && appData[action]) {
-                const queue = Object.keys(appData[action])[0]
-                const ids = appData[action][queue]
+              if (typeof integrationConfig[action] === 'object' && integrationConfig[action]) {
+                const queue = Object.keys(integrationConfig[action])[0]
+                const ids = integrationConfig[action][queue]
                 if (Array.isArray(ids) && integrationHandlers[action][queue]) {
                   const nextId = ids[0]
                   if (typeof nextId === 'string' && nextId.length) {
@@ -65,7 +91,7 @@ exports.post = ({ appSdk }, req, res) => {
                       { appSdk, storeId },
                       iderisLoginToken,
                       { action, queue, nextId },
-                      appData.ideris_product_data
+                      appData
                     ).then(() => ({ appData, action, queue }))
                   }
                 }
