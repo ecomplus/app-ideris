@@ -14,9 +14,9 @@ module.exports = ({ appSdk, storeId }, iderisLoginToken, queueEntry, iderisProdu
     .then(({ data }) => {
       const product = data
       const ideris = new Ideris(iderisLoginToken)
-      const job = ideris.preparing
+      ideris.preparing
         .then(() => {
-          return ideris.axios.get(`/Produto/?sku=${product.sku}`)
+          const job = ideris.axios.get(`/Produto/?sku=${product.sku}`)
             .catch(err => {
               if (err.response && err.response.status === 400) {
                 return {}
@@ -38,9 +38,9 @@ module.exports = ({ appSdk, storeId }, iderisLoginToken, queueEntry, iderisProdu
               }
               return ideris.axios[method]('/Produto', parseProduct(product, iderisProductPayload))
             })
+          handleJob({ appSdk, storeId }, queueEntry, job)
         })
         .catch(console.error)
-      handleJob({ appSdk, storeId }, queueEntry, job)
     })
 
     .catch(err => {
