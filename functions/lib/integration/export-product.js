@@ -4,7 +4,7 @@ const Ideris = require('../ideris/constructor')
 const parseProduct = require('./parsers/product-to-ideris')
 const handleJob = require('./handle-job')
 
-module.exports = ({ appSdk, storeId }, iderisLoginToken, queueEntry, iderisProductPayload) => {
+module.exports = ({ appSdk, storeId }, iderisLoginToken, queueEntry, appData) => {
   const productId = queueEntry.nextId
   return ecomClient.store({
     storeId,
@@ -14,6 +14,7 @@ module.exports = ({ appSdk, storeId }, iderisLoginToken, queueEntry, iderisProdu
     .then(({ data }) => {
       const product = data
       const ideris = new Ideris(iderisLoginToken)
+
       ideris.preparing
         .then(() => {
           const job = ideris.axios.get(`/Produto/?sku=${product.sku}`)
@@ -23,20 +24,19 @@ module.exports = ({ appSdk, storeId }, iderisLoginToken, queueEntry, iderisProdu
               }
               throw err
             })
+
             .then(({ data }) => {
-              let method, iderisProduct
+              let iderisProductId
               if (data && Array.isArray(data.result)) {
-                iderisProduct = data.result.find(({ sku }) => sku === product.sku)
-              }
-              if (iderisProduct) {
-                iderisProductPayload = {
-                  id: iderisProduct.id
+                const iderisProduct = data.result.find(({ sku }) => sku === product.sku)
+                if (iderisProduct) {
+                  iderisProductId = iderisProduct.id
                 }
-                method = 'put'
-              } else {
-                method = 'post'
               }
-              return ideris.axios[method]('/Produto', parseProduct(product, iderisProductPayload))
+              return ideris.axios[iderisProductId ? 'put' : 'post'](
+                '/Produto',
+                parseProduct(product, iderisProductId, appData)
+              )
             })
           handleJob({ appSdk, storeId }, queueEntry, job)
         })
