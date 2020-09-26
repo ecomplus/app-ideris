@@ -59,11 +59,6 @@
             "default": false,
             "title": "Exportar novos produtos"
           },
-          "new_orders": {
-            "type": "boolean",
-            "default": true,
-            "title": "Exportar novos pedidos"
-          },
           "update_quantity": {
             "type": "boolean",
             "default": true,
