@@ -56,8 +56,6 @@ exports.post = ({ appSdk }, req, res) => {
               integrationConfig = appData
               break
             case 'products':
-              console.log(JSON.stringify(trigger.body))
-              console.log(JSON.stringify(appData))
               if (trigger.body) {
                 if (trigger.action === 'create') {
                   if (!appData.new_products) {
@@ -78,7 +76,6 @@ exports.post = ({ appSdk }, req, res) => {
               break
           }
 
-          console.log(JSON.stringify(integrationConfig))
           if (integrationConfig) {
             const actions = Object.keys(integrationHandlers)
             for (let i = 0; i < actions.length; i++) {
