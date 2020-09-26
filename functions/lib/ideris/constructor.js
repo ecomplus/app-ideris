@@ -20,6 +20,7 @@ module.exports = function (loginToken, firestoreColl = 'ideris_tokens') {
     const handleLogin = () => {
       login(loginToken)
         .then(accessToken => {
+          console.log(`> New Ideris token ${accessToken}`)
           authenticate(accessToken)
           if (documentRef) {
             documentRef.set({ accessToken }).catch(console.error)
@@ -29,16 +30,18 @@ module.exports = function (loginToken, firestoreColl = 'ideris_tokens') {
     }
 
     if (documentRef) {
-      documentRef.get().then((documentSnapshot) => {
-        if (
-          documentSnapshot.exists &&
-          Date.now() - documentSnapshot.updateTime.toDate().getTime() <= 18 * 60 * 60 * 1000
-        ) {
-          authenticate(documentSnapshot.get('accessToken'))
-        } else {
-          handleLogin()
-        }
-      })
+      documentRef.get()
+        .then((documentSnapshot) => {
+          if (
+            documentSnapshot.exists &&
+            Date.now() - documentSnapshot.updateTime.toDate().getTime() <= 18 * 60 * 60 * 1000
+          ) {
+            authenticate(documentSnapshot.get('accessToken'))
+          } else {
+            handleLogin()
+          }
+        })
+        .catch(console.error)
     } else {
       handleLogin()
     }
