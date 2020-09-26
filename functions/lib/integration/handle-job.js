@@ -20,11 +20,13 @@ const queueRetry = (appSession, { action, queue, nextId }, appData, response) =>
 
       const queueList = appData[action][queue] || []
       queueList.unshift(nextId)
-      return updateAppData(appSession, {
-        [action]: {
-          [queue]: queueList
-        }
-      }).then(() => documentRef.set(response))
+      return setTimeout(() => {
+        updateAppData(appSession, {
+          [action]: {
+            [queue]: queueList
+          }
+        }).then(() => documentRef.set(response))
+      }, 3000)
     })
     .catch(console.error)
 }
