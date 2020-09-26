@@ -19,24 +19,24 @@ module.exports = ({ appSdk, storeId }, iderisLoginToken, queueEntry, iderisProdu
           return ideris.axios.get(`/Produto/?sku=${product.sku}`)
             .catch(err => {
               if (err.response && err.response.status === 400) {
-                return { result: [] }
+                return {}
               }
               throw err
             })
             .then(({ data }) => {
-              if (Array.isArray(data.result)) {
-                const iderisProduct = data.result.find(({ sku }) => sku === product.sku)
-                let method
-                if (iderisProduct) {
-                  iderisProductPayload = {
-                    id: iderisProduct.id
-                  }
-                  method = 'put'
-                } else {
-                  method = 'post'
-                }
-                return ideris.axios[method]('/Produto', parseProduct(product, iderisProductPayload))
+              let method, iderisProduct
+              if (data && Array.isArray(data.result)) {
+                iderisProduct = data.result.find(({ sku }) => sku === product.sku)
               }
+              if (iderisProduct) {
+                iderisProductPayload = {
+                  id: iderisProduct.id
+                }
+                method = 'put'
+              } else {
+                method = 'post'
+              }
+              return ideris.axios[method]('/Produto', parseProduct(product, iderisProductPayload))
             })
         })
         .catch(console.error)
