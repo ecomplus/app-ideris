@@ -60,6 +60,7 @@ exports.post = ({ appSdk }, req, res) => {
                 if (Array.isArray(ids) && integrationHandlers[queue]) {
                   const nextId = ids[0]
                   if (typeof nextId === 'string' && nextId.length) {
+                    console.log(`> Starting ${action}`)
                     return integrationHandlers[queue](
                       { appSdk, storeId },
                       iderisLoginToken,
@@ -72,6 +73,7 @@ exports.post = ({ appSdk }, req, res) => {
             }
           }
         }
+        console.log('> Skip webhook:', JSON.stringify(appData))
 
         // nothing to do
         return {}
