@@ -66,14 +66,14 @@ const log = ({ appSdk, storeId }, queueEntry, payload) => {
             notes = 'Error: '
             if (response) {
               const { data, status } = response
-              notes += `Status ${status}\n${JSON.stringify(data)}`
+              notes += `Status ${status} \n${JSON.stringify(data)}`
               if (!status || status > 403) {
                 queueRetry({ appSdk, storeId, auth }, queueEntry, appData, response)
               }
             }
             if (config) {
-              const { url, data } = config
-              notes += `\n\n-- Request --\n${url}\n${JSON.stringify(data)}`
+              const { url, method, data } = config
+              notes += `\n\n-- Request -- \n${method} ${url} \n${JSON.stringify(data)}`
             }
           }
           if (notes) {
