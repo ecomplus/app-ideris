@@ -53,7 +53,9 @@ const log = ({ appSdk, storeId }, queueEntry, payload) => {
             if (payload) {
               const { data, status } = payload
               if (data) {
-                if (data.id) {
+                if (typeof data === 'string' || typeof data === 'number') {
+                  logEntry.ideris_id = String(data)
+                } else if (data.id) {
                   logEntry.ideris_id = String(data.id)
                 } else if (data._id) {
                   logEntry.resource_id = data._id
