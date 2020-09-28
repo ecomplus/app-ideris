@@ -51,9 +51,11 @@ exports.post = ({ appSdk }, req, res) => {
         const iderisLoginToken = appData.ideris_login_token
         if (typeof iderisLoginToken === 'string' && iderisLoginToken) {
           let integrationConfig
+          let canCreateNew = false
           switch (trigger.resource) {
             case 'applications':
               integrationConfig = appData
+              canCreateNew = true
               break
             case 'products':
               if (trigger.body) {
@@ -61,6 +63,7 @@ exports.post = ({ appSdk }, req, res) => {
                   if (!appData.new_products) {
                     break
                   }
+                  canCreateNew = true
                 } else if (
                   (!trigger.body.quantity || !appData.update_quantity) &&
                   (!trigger.body.price || !appData.update_price)
@@ -91,7 +94,8 @@ exports.post = ({ appSdk }, req, res) => {
                       { appSdk, storeId },
                       iderisLoginToken,
                       { action, queue, nextId },
-                      appData
+                      appData,
+                      canCreateNew
                     ).then(() => ({ appData, action, queue }))
                   }
                 }

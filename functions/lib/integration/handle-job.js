@@ -95,7 +95,7 @@ const handleJob = (appSession, queueEntry, job) => {
     .then(payload => {
       if (typeof payload.then === 'function') {
         handleJob(appSession, queueEntry, payload)
-      } else {
+      } else if (payload !== null) {
         log(appSession, queueEntry, payload)
       }
       return true

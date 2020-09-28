@@ -4,7 +4,7 @@ const Ideris = require('../ideris/constructor')
 const parseProduct = require('./parsers/product-to-ideris')
 const handleJob = require('./handle-job')
 
-module.exports = ({ appSdk, storeId }, iderisLoginToken, queueEntry, appData) => {
+module.exports = ({ appSdk, storeId }, iderisLoginToken, queueEntry, appData, canCreateNew) => {
   const productId = queueEntry.nextId
   return ecomClient.store({
     storeId,
@@ -31,6 +31,8 @@ module.exports = ({ appSdk, storeId }, iderisLoginToken, queueEntry, appData) =>
                 const iderisProduct = data.result.find(({ sku }) => sku === product.sku)
                 if (iderisProduct) {
                   iderisProductId = iderisProduct.id
+                } else if (!canCreateNew) {
+                  return null
                 }
               }
               return ideris.axios[iderisProductId ? 'put' : 'post'](
