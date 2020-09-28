@@ -63,10 +63,9 @@ const log = ({ appSdk, storeId }, queueEntry, payload) => {
             }
           } else {
             const { config, response } = payload
-            notes = 'Error: '
             if (response) {
               const { data, status } = response
-              notes += `Status ${status} \n${JSON.stringify(data)}`
+              notes = `Error: Status ${status} \n${JSON.stringify(data)}`
               if (!status || status > 403) {
                 queueRetry({ appSdk, storeId, auth }, queueEntry, appData, response)
               }
@@ -75,7 +74,7 @@ const log = ({ appSdk, storeId }, queueEntry, payload) => {
                 notes += `\n\n-- Request -- \n${method} ${url} \n${JSON.stringify(data)}`
               }
             } else {
-              notes += `${payload.message} \n-> ${payload.stack}`
+              notes = payload.stack
             }
           }
           if (notes) {
