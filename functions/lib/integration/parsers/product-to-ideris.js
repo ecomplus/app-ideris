@@ -84,7 +84,7 @@ module.exports = (product, iderisProductId, appData) => {
     if (!appData.update_price) {
       delete iderisProduct.valorVenda
     }
-    if (!appData.update_quantity) {
+    if (product.variations || !appData.update_quantity) {
       delete iderisProduct.quantidadeEstoquePrincipal
     }
   }
