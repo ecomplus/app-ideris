@@ -1,6 +1,7 @@
 const ecomUtils = require('@ecomplus/utils')
 
 module.exports = (product, iderisProductId, appData) => {
+  const hasVariations = product.variations && product.variations.length
   let iderisProduct = {
     valorVenda: ecomUtils.price(product),
     quantidadeEstoquePrincipal: product.quantity
@@ -84,12 +85,12 @@ module.exports = (product, iderisProductId, appData) => {
     if (!appData.update_price) {
       delete iderisProduct.valorVenda
     }
-    if (product.variations || !appData.update_quantity) {
+    if (hasVariations || !appData.update_quantity) {
       delete iderisProduct.quantidadeEstoquePrincipal
     }
   }
 
-  if (product.variations && product.variations.length && (!iderisProductId || appData.update_quantity)) {
+  if (hasVariations && (!iderisProductId || appData.update_quantity)) {
     iderisProduct.Variacao = []
     product.variations.forEach((variation, i) => {
       const iderisVariation = {

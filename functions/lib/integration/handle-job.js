@@ -93,10 +93,12 @@ const log = ({ appSdk, storeId }, queueEntry, payload) => {
 const handleJob = (appSession, queueEntry, job) => {
   job
     .then(payload => {
-      if (typeof payload.then === 'function') {
-        handleJob(appSession, queueEntry, payload)
-      } else if (payload !== null) {
-        log(appSession, queueEntry, payload)
+      if (payload) {
+        if (typeof payload.then === 'function') {
+          handleJob(appSession, queueEntry, payload)
+        } else {
+          log(appSession, queueEntry, payload)
+        }
       }
       return true
     })
