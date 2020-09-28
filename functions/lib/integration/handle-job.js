@@ -70,10 +70,12 @@ const log = ({ appSdk, storeId }, queueEntry, payload) => {
               if (!status || status > 403) {
                 queueRetry({ appSdk, storeId, auth }, queueEntry, appData, response)
               }
-            }
-            if (config) {
-              const { url, method, data } = config
-              notes += `\n\n-- Request -- \n${method} ${url} \n${JSON.stringify(data)}`
+              if (config) {
+                const { url, method, data } = config
+                notes += `\n\n-- Request -- \n${method} ${url} \n${JSON.stringify(data)}`
+              }
+            } else {
+              notes += payload.message
             }
           }
           if (notes) {
