@@ -97,7 +97,7 @@ module.exports = (product, iderisProductId, appData) => {
         quantidadeVariacao: variation.quantity || product.quantity || 1
       }
       if (!iderisProductId) {
-        const spec = Object.keys[variation.specifications][0]
+        const spec = Object.keys(variation.specifications)[0]
         iderisVariation.nomeAtributo = spec || 'R'
         iderisVariation.valorAtributo = spec && variation.specifications[spec][0]
           ? variation.specifications[spec][0].text
