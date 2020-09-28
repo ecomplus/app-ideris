@@ -86,7 +86,7 @@ exports.post = ({ appSdk }, req, res) => {
                 if (Array.isArray(ids) && integrationHandlers[action][queue]) {
                   const nextId = ids[0]
                   if (typeof nextId === 'string' && nextId.length) {
-                    console.log(`> Starting ${action}`)
+                    console.log(`> Starting ${action} ${nextId}`)
                     return integrationHandlers[action][queue](
                       { appSdk, storeId },
                       iderisLoginToken,
