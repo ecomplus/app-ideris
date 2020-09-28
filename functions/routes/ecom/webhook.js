@@ -107,7 +107,7 @@ exports.post = ({ appSdk }, req, res) => {
 
       .then(({ appData, action, queue }) => {
         if (appData && appData[action] && Array.isArray(appData[action][queue])) {
-          res.send(`> Processed \`${action}.${queue}\``)
+          res.status(202).send(`> Processed \`${action}.${queue}\``)
           return updateAppData({ appSdk, storeId, auth }, {
             [action]: {
               [queue]: appData[action][queue].slice(1)
