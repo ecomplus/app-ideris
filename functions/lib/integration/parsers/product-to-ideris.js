@@ -103,7 +103,7 @@ module.exports = (product, iderisProductId, appData) => {
           ? variation.specifications[spec][0].text
           : Math.floor(Math.random() * 1000).toString()
         const img = ecomUtils.img(product, variation.picture_id, 'zoom')
-        if (img && /\.(jpg|jpeg|png)$/i.test(img.url)) {
+        if (img) {
           iderisVariation.Imagem = [{
             urlImagem: img.url
           }]
