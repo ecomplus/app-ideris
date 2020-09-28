@@ -75,7 +75,7 @@ const log = ({ appSdk, storeId }, queueEntry, payload) => {
                 notes += `\n\n-- Request -- \n${method} ${url} \n${JSON.stringify(data)}`
               }
             } else {
-              notes += payload.message
+              notes += `${payload.message} \n-> ${payload.stack}`
             }
           }
           if (notes) {
