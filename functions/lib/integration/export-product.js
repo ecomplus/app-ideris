@@ -36,7 +36,7 @@ module.exports = ({ appSdk, storeId }, iderisLoginToken, queueEntry, appData, ca
                 }
               }
               const iderisBody = parseProduct(product, iderisProductId, appData)
-              return iderisBody && !Object.keys(iderisBody).length
+              return iderisBody && Object.keys(iderisBody).length
                 ? ideris.axios[iderisProductId ? 'put' : 'post']('/Produto', iderisBody)
                 : null
             })
