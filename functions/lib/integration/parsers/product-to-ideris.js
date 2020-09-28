@@ -15,7 +15,7 @@ module.exports = (product, iderisProductId, appData) => {
       categoriaML: 'MLB3530',
       ...appData.ideris_product_data,
       sku: product.sku,
-      titulo: ecomUtils.name(product, 'pt_br'),
+      titulo: ecomUtils.name(product, 'pt_br').substring(0, 60),
       valorCusto: product.cost_price || 1,
       ...iderisProduct
     }
