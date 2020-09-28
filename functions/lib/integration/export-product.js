@@ -35,10 +35,10 @@ module.exports = ({ appSdk, storeId }, iderisLoginToken, queueEntry, appData, ca
                   return null
                 }
               }
-              return ideris.axios[iderisProductId ? 'put' : 'post'](
-                '/Produto',
-                parseProduct(product, iderisProductId, appData)
-              )
+              const iderisBody = parseProduct(product, iderisProductId, appData)
+              return iderisBody && !Object.keys(iderisBody).length
+                ? ideris.axios[iderisProductId ? 'put' : 'post']('/Produto', iderisBody)
+                : null
             })
           handleJob({ appSdk, storeId }, queueEntry, job)
         })
