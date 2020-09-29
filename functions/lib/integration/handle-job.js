@@ -18,7 +18,10 @@ const queueRetry = (appSession, { action, queue, nextId }, appData, response) =>
         }
       }
 
-      const queueList = appData[action][queue] || []
+      let queueList = appData[action] && appData[action][queue]
+      if (!Array.isArray(queueList)) {
+        queueList = []
+      }
       queueList.unshift(nextId)
       return setTimeout(() => {
         updateAppData(appSession, {
