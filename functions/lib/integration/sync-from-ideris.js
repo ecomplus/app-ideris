@@ -107,15 +107,13 @@ const queueImportOrders = (appSession, iderisIds) => {
   return Promise.resolve(null)
 }
 
-module.exports = context => {
-  setup(null, true, firestore())
-    .then(appSdk => {
-      return listStoreIds().then(storeIds => {
-        const runAllStores = fn => storeIds
-          .sort(() => Math.random() - Math.random())
-          .map(storeId => fn({ appSdk, storeId }))
-        return Promise.all(runAllStores(fetchNewIderisOrders))
-      })
+module.exports = context => setup(null, true, firestore())
+  .then(appSdk => {
+    return listStoreIds().then(storeIds => {
+      const runAllStores = fn => storeIds
+        .sort(() => Math.random() - Math.random())
+        .map(storeId => fn({ appSdk, storeId }))
+      return Promise.all(runAllStores(fetchNewIderisOrders))
     })
-    .catch(console.error)
-}
+  })
+  .catch(console.error)
