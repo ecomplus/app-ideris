@@ -4,14 +4,14 @@ const parseOrder = require('./parsers/order-to-ecomplus/')
 const parseStatus = require('./parsers/order-to-ecomplus/status')
 const handleJob = require('./handle-job')
 
-const getLastStatusRecord = records => {
+const getLastStatus = records => {
   let statusRecord
   records.forEach(record => {
     if (record && (!statusRecord || !record.date_time || record.date_time >= statusRecord.date_time)) {
       statusRecord = record
     }
   })
-  return statusRecord
+  return statusRecord && statusRecord.status
 }
 
 module.exports = ({ appSdk, storeId, auth }, iderisLoginToken, queueEntry, appData) => new Promise(resolve => {
@@ -50,7 +50,7 @@ module.exports = ({ appSdk, storeId, auth }, iderisLoginToken, queueEntry, appDa
                   ].forEach(([newStatus, subresource]) => {
                     if (
                       newStatus &&
-                      (!order[subresource] || getLastStatusRecord(order[subresource]) !== financialStatus)
+                      (!order[subresource] || getLastStatus(order[subresource]) !== financialStatus)
                     ) {
                       data.status = newStatus
                       appSdk.apiRequest(storeId, `/orders/${order._id}/${subresource}.json`, 'POST', data, auth)
