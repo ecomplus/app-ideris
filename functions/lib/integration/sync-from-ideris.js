@@ -76,14 +76,19 @@ const fetchNewIderisOrders = ({ appSdk, storeId }) => {
   })
 }
 
+const updateSavedOrders = ({ appSdk, storeId }) => {
+
+}
+
 module.exports = context => {
   setup(null, true, firestore())
     .then(appSdk => {
       return listStoreIds().then(storeIds => {
-        return Promise.all(
-          storeIds.sort(() => Math.random() - Math.random())
-            .map(storeId => fetchNewIderisOrders({ appSdk, storeId }))
-        )
+        const runAllStores = fn => storeIds
+          .sort(() => Math.random() - Math.random())
+          .map(storeId => fn({ appSdk, storeId }))
+        return Promise.all(runAllStores(fetchNewIderisOrders))
+          .then(runAllStores(updateSavedOrders))
       })
     })
     .catch(console.error)
