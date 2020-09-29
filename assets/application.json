@@ -21,11 +21,18 @@
     "categories": [],
     "customers": [],
     "orders": [
-      "GET"
+      "GET",
+      "POST"
     ],
     "carts": [],
-    "orders/fulfillments": [],
-    "orders/payments_history": [],
+    "orders/fulfillments": [
+      "GET",
+      "POST"
+    ],
+    "orders/payments_history": [
+      "GET",
+      "POST"
+    ],
     "products/inventory_records": [
       "POST"
     ],
