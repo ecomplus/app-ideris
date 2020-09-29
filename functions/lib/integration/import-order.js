@@ -1,4 +1,3 @@
-const ecomUtils = require('@ecomplus/utils')
 const { firestore } = require('firebase-admin')
 const Ideris = require('../ideris/constructor')
 const parseOrder = require('./parsers/order-to-ecomplus/')
@@ -42,7 +41,6 @@ module.exports = ({ appSdk, storeId, auth }, iderisLoginToken, queueEntry, appDa
                   const order = result[0]
                   const promises = []
                   const data = {
-                    _id: ecomUtils.randomObjectId(),
                     date_time: new Date().toISOString(),
                     flags: ['from-ideris']
                   }
