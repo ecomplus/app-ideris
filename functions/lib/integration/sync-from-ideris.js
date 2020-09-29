@@ -59,11 +59,10 @@ const fetchNewIderisOrders = ({ appSdk, storeId }) => {
                       }
                     })
                     if (iderisIds.length) {
-                      return updateAppData({ appSdk, storeId }, {
-                        importation: {
-                          order_ids: iderisIds
-                        }
-                      }).then(() => documentRef.set(data.result[data.result.length - 1]))
+                      return updateSavedOrders({ appSdk, storeId }, iderisIds)
+                        .then(() => documentRef.set(data.result[data.result.length - 1]))
+                    } else {
+                      return updateSavedOrders({ appSdk, storeId })
                     }
                   }
                 })
@@ -76,8 +75,36 @@ const fetchNewIderisOrders = ({ appSdk, storeId }) => {
   })
 }
 
-const updateSavedOrders = ({ appSdk, storeId }) => {
+const updateSavedOrders = ({ appSdk, storeId }, iderisIds = []) => {
+  return firestore()
+    .collection('ideris_orders')
+    .where('storeId', '==', storeId).orderBy('updatedAt', 'asc').limit(6).get()
+    .then(querySnapshot => {
+      querySnapshot.forEach(documentSnapshot => {
+        const { iderisOrder } = documentSnapshot.data()
+        if (
+          iderisOrder &&
+          iderisOrder.id &&
+          Date.now() - new Date(iderisOrder.data).getTime() <= 60 * 24 * 60 * 60 * 1000
+        ) {
+          iderisIds.push(String(iderisOrder.id))
+        } else {
+          documentSnapshot.ref.delete().catch(console.error)
+        }
+      })
+      return queueImportOrders({ appSdk, storeId }, iderisIds)
+    })
+}
 
+const queueImportOrders = (appSession, iderisIds) => {
+  if (iderisIds && iderisIds.length) {
+    return updateAppData(appSession, {
+      importation: {
+        order_ids: iderisIds
+      }
+    })
+  }
+  return Promise.resolve(null)
 }
 
 module.exports = context => {
@@ -88,7 +115,6 @@ module.exports = context => {
           .sort(() => Math.random() - Math.random())
           .map(storeId => fn({ appSdk, storeId }))
         return Promise.all(runAllStores(fetchNewIderisOrders))
-          .then(runAllStores(updateSavedOrders))
       })
     })
     .catch(console.error)

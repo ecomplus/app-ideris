@@ -22,13 +22,6 @@ module.exports = ({ appSdk, storeId, auth }, iderisLoginToken, queueEntry, appDa
                 .then(({ response }) => {
                   const { result } = response.data
                   if (!result.length) {
-                    try {
-                      firestore()
-                        .doc(`ideris_orders/${storeId}.${iderisLoginToken}.${iderisOrderId}`)
-                        .set({ storeId, iderisOrder })
-                    } catch (err) {
-                      console.error(err)
-                    }
                     return appSdk.apiRequest(storeId, '/orders.json', 'POST', parseOrder(iderisOrder), auth)
                   }
 
@@ -50,6 +43,21 @@ module.exports = ({ appSdk, storeId, auth }, iderisLoginToken, queueEntry, appDa
                   }
 
                   return Promise.all(promises)
+                })
+
+                .then(payload => {
+                  try {
+                    firestore()
+                      .doc(`ideris_orders/${storeId}_${iderisOrderId}`)
+                      .set({
+                        storeId,
+                        iderisOrder,
+                        updatedAt: firestore.Timestamp.fromDate(new Date())
+                      })
+                  } catch (err) {
+                    console.error(err)
+                  }
+                  return payload
                 })
             }
             return null
