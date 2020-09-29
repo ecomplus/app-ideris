@@ -53,7 +53,8 @@ module.exports = ({ appSdk, storeId, auth }, iderisLoginToken, queueEntry, appDa
                       (!order[subresource] || getLastStatus(order[subresource]) !== financialStatus)
                     ) {
                       data.status = newStatus
-                      appSdk.apiRequest(storeId, `/orders/${order._id}/${subresource}.json`, 'POST', data, auth)
+                      const endpoint = `/orders/${order._id}/${subresource}.json`
+                      promises.push(appSdk.apiRequest(storeId, endpoint, 'POST', data, auth))
                     }
                   })
 
