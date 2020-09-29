@@ -57,7 +57,7 @@ module.exports = ({ appSdk, storeId, auth }, iderisLoginToken, queueEntry, appDa
                     }
                   })
 
-                  return Promise.all(promises)
+                  return Promise.all(promises).then(([firstResult]) => firstResult)
                 })
 
                 .then(payload => {
@@ -72,7 +72,7 @@ module.exports = ({ appSdk, storeId, auth }, iderisLoginToken, queueEntry, appDa
                   } catch (err) {
                     console.error(err)
                   }
-                  return payload
+                  return (payload && payload.response) || payload
                 })
             }
           }
