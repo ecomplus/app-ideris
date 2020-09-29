@@ -21,10 +21,8 @@ module.exports = ({ appSdk, storeId, auth }, iderisLoginToken, queueEntry, appDa
 
   ideris.preparing
     .then(() => {
-      console.log(`> Importing order ${iderisOrderId}`)
       const job = ideris.axios.get(`/Pedido/${iderisOrderId}`)
         .then(({ data }) => {
-          console.log(`> Ideris order ${JSON.stringify(data)}`)
           if (data && Array.isArray(data.result)) {
             const iderisOrder = data.result.find(({ id }) => id === iderisOrderId)
             if (iderisOrder) {
@@ -81,6 +79,7 @@ module.exports = ({ appSdk, storeId, auth }, iderisLoginToken, queueEntry, appDa
           }
         })
       handleJob({ appSdk, storeId }, queueEntry, job)
+      job.then(payload => console.log(`> Import order job: ${JSON.stringify(payload)}`)).catch(console.error)
     })
     .catch(console.error)
     .finally(resolve)
