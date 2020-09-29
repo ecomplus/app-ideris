@@ -18,8 +18,8 @@ const listStoreIds = () => {
         if (storeIds.indexOf(storeId) === -1) {
           storeIds.push(storeId)
         }
-        return storeIds
       })
+      return storeIds
     })
 }
 
