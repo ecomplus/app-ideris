@@ -77,8 +77,8 @@ module.exports = ({ appSdk, storeId, auth }, iderisLoginToken, queueEntry, appDa
                   return payload
                 })
             }
-            return null
           }
+          throw new Error('Ideris order not found')
         })
       handleJob({ appSdk, storeId }, queueEntry, job)
     })
