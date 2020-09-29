@@ -25,56 +25,65 @@ module.exports = ({ appSdk, storeId, auth }, iderisLoginToken, queueEntry, appDa
           if (data && Array.isArray(data.result)) {
             const iderisOrder = data.result.find(({ id }) => String(id) === String(iderisOrderId))
             if (iderisOrder) {
-              const listEndpoint = `/orders.json?hidden_metafields.value=${iderisOrderId}_ideris` +
-                '&fields=_id,payments_history,fulfillments'
-              return appSdk.apiRequest(storeId, listEndpoint, 'GET', null, auth)
+              const documentRef = firestore().doc(`ideris_orders/${storeId}_${iderisOrderId}`)
+              return documentRef.get().then(documentSnapshot => {
+                if (
+                  documentSnapshot.exists &&
+                  documentSnapshot.get('iderisOrder.status') === iderisOrder.status
+                ) {
+                  console.log(`> Skipping Ideris order ${iderisOrderId}`)
+                  return null
+                }
 
-                .then(({ response }) => {
-                  const { result } = response.data
-                  if (!result.length) {
-                    return parseOrder(iderisOrder, storeId, appData).then(order => {
-                      return appSdk.apiRequest(storeId, '/orders.json', 'POST', order, auth)
-                    })
-                  }
+                const listEndpoint = `/orders.json?hidden_metafields.value=${iderisOrderId}_ideris` +
+                  '&fields=_id,payments_history,fulfillments'
+                return appSdk.apiRequest(storeId, listEndpoint, 'GET', null, auth)
 
-                  const { fulfillmentStatus, financialStatus } = parseStatus(iderisOrder)
-                  const order = result[0]
-                  const promises = []
-                  const data = {
-                    date_time: new Date().toISOString(),
-                    flags: ['from-ideris']
-                  }
-                  ;[
-                    [financialStatus, 'payments_history'],
-                    [fulfillmentStatus, 'fulfillments']
-                  ].forEach(([newStatus, subresource]) => {
-                    if (
-                      newStatus &&
-                      (!order[subresource] || getLastStatus(order[subresource]) !== financialStatus)
-                    ) {
-                      data.status = newStatus
-                      const endpoint = `/orders/${order._id}/${subresource}.json`
-                      promises.push(appSdk.apiRequest(storeId, endpoint, 'POST', data, auth))
+                  .then(({ response }) => {
+                    const { result } = response.data
+                    if (!result.length) {
+                      return parseOrder(iderisOrder, storeId, appData).then(order => {
+                        return appSdk.apiRequest(storeId, '/orders.json', 'POST', order, auth)
+                      })
                     }
+
+                    const { fulfillmentStatus, financialStatus } = parseStatus(iderisOrder)
+                    const order = result[0]
+                    const promises = []
+                    const data = {
+                      date_time: new Date().toISOString(),
+                      flags: ['from-ideris']
+                    }
+                    ;[
+                      [financialStatus, 'payments_history'],
+                      [fulfillmentStatus, 'fulfillments']
+                    ].forEach(([newStatus, subresource]) => {
+                      if (
+                        newStatus &&
+                        (!order[subresource] || getLastStatus(order[subresource]) !== financialStatus)
+                      ) {
+                        data.status = newStatus
+                        const endpoint = `/orders/${order._id}/${subresource}.json`
+                        promises.push(appSdk.apiRequest(storeId, endpoint, 'POST', data, auth))
+                      }
+                    })
+
+                    return Promise.all(promises).then(([firstResult]) => firstResult)
                   })
 
-                  return Promise.all(promises).then(([firstResult]) => firstResult)
-                })
-
-                .then(payload => {
-                  try {
-                    firestore()
-                      .doc(`ideris_orders/${storeId}_${iderisOrderId}`)
-                      .set({
+                  .then(payload => {
+                    try {
+                      documentRef.set({
                         storeId,
                         iderisOrder,
                         updatedAt: firestore.Timestamp.fromDate(new Date())
                       })
-                  } catch (err) {
-                    console.error(err)
-                  }
-                  return (payload && payload.response) || payload
-                })
+                    } catch (err) {
+                      console.error(err)
+                    }
+                    return (payload && payload.response) || payload
+                  })
+              })
             }
           }
           throw new Error('Ideris order not found')
