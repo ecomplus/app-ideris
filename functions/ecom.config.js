@@ -83,7 +83,7 @@ const app = {
     ],
     orders: [
       'GET',           // List/read orders with public and private fields
-      // 'POST',          // Create orders
+      'POST',          // Create orders
       // 'PATCH',         // Edit orders
       // 'PUT',           // Overwrite orders
       // 'DELETE',        // Delete orders
@@ -100,13 +100,13 @@ const app = {
      * Prefer using 'fulfillments' and 'payment_history' subresources to manipulate update order status.
      */
     'orders/fulfillments': [
-      // 'GET',           // List/read order fulfillment and tracking events
-      // 'POST',          // Create fulfillment event with new status
+      'GET',           // List/read order fulfillment and tracking events
+      'POST',          // Create fulfillment event with new status
       // 'DELETE',        // Delete fulfillment event
     ],
     'orders/payments_history': [
-      // 'GET',           // List/read order payments history events
-      // 'POST',          // Create payments history entry with new status
+      'GET',           // List/read order payments history events
+      'POST',          // Create payments history entry with new status
       // 'DELETE',        // Delete payments history entry
     ],
 
