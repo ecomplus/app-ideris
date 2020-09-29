@@ -33,8 +33,9 @@ module.exports = ({ appSdk, storeId, auth }, iderisLoginToken, queueEntry, appDa
                 .then(({ response }) => {
                   const { result } = response.data
                   if (!result.length) {
-                    const newOrder = parseOrder(iderisOrder, storeId, appData)
-                    return appSdk.apiRequest(storeId, '/orders.json', 'POST', newOrder, auth)
+                    return parseOrder(iderisOrder, storeId, appData).then(order => {
+                      return appSdk.apiRequest(storeId, '/orders.json', 'POST', order, auth)
+                    })
                   }
 
                   const { fulfillmentStatus, financialStatus } = parseStatus(iderisOrder)
