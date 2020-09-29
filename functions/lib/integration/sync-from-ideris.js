@@ -43,7 +43,7 @@ const fetchNewIderisOrders = ({ appSdk, storeId }) => {
                 lastId = documentSnapshot.get('id')
               } else {
                 dateStart = new Date()
-                dateStart.setMinutes(dateStart.getMinutes() - 3)
+                dateStart.setMinutes(dateStart.getMinutes() - 5)
               }
 
               return ideris.axios.get(`/ListaPedido?dataInicial=${dateStart.toISOString()}`)
