@@ -5,6 +5,16 @@ const parseOrder = require('./parsers/order-to-ecomplus/')
 const parseStatus = require('./parsers/order-to-ecomplus/status')
 const handleJob = require('./handle-job')
 
+const getLastStatusRecord = records => {
+  let statusRecord
+  records.forEach(record => {
+    if (record && (!statusRecord || !record.date_time || record.date_time >= statusRecord.date_time)) {
+      statusRecord = record
+    }
+  })
+  return statusRecord
+}
+
 module.exports = ({ appSdk, storeId, auth }, iderisLoginToken, queueEntry, appData) => {
   const iderisOrderId = queueEntry.nextId
   const ideris = new Ideris(iderisLoginToken)
@@ -16,7 +26,8 @@ module.exports = ({ appSdk, storeId, auth }, iderisLoginToken, queueEntry, appDa
           if (data && Array.isArray(data.result)) {
             const iderisOrder = data.result.find(({ id }) => id === iderisOrderId)
             if (iderisOrder) {
-              const listEndpoint = `/orders.json?hidden_metafields.value=${iderisOrderId}_ideris`
+              const listEndpoint = `/orders.json?hidden_metafields.value=${iderisOrderId}_ideris` +
+                '&fields=_id,payments_history,fulfillments'
               return appSdk.apiRequest(storeId, listEndpoint, 'GET', null, auth)
 
                 .then(({ response }) => {
@@ -26,21 +37,25 @@ module.exports = ({ appSdk, storeId, auth }, iderisLoginToken, queueEntry, appDa
                   }
 
                   const { fulfillmentStatus, financialStatus } = parseStatus(iderisOrder)
-                  const orderId = result[0]._id
+                  const order = result[0]
                   const promises = []
                   const data = {
                     _id: ecomUtils.randomObjectId(),
                     date_time: new Date().toISOString(),
                     flags: ['from-ideris']
                   }
-                  if (fulfillmentStatus) {
-                    data.status = fulfillmentStatus
-                    appSdk.apiRequest(storeId, `/orders/${orderId}/fulfillments.json`, 'POST', data, auth)
-                  }
-                  if (financialStatus) {
-                    data.status = financialStatus
-                    appSdk.apiRequest(storeId, `/orders/${orderId}/payments_history.json`, 'POST', data, auth)
-                  }
+                  ;[
+                    [financialStatus, 'payments_history'],
+                    [fulfillmentStatus, 'fulfillments']
+                  ].forEach(([newStatus, subresource]) => {
+                    if (
+                      newStatus &&
+                      (!order[subresource] || getLastStatusRecord(order[subresource]) !== financialStatus)
+                    ) {
+                      data.status = newStatus
+                      appSdk.apiRequest(storeId, `/orders/${order._id}/${subresource}.json`, 'POST', data, auth)
+                    }
+                  })
 
                   return Promise.all(promises)
                 })
