@@ -24,7 +24,7 @@ module.exports = ({ appSdk, storeId, auth }, iderisLoginToken, queueEntry, appDa
       const job = ideris.axios.get(`/Pedido/${iderisOrderId}`)
         .then(({ data }) => {
           if (data && Array.isArray(data.result)) {
-            const iderisOrder = data.result.find(({ id }) => id === iderisOrderId)
+            const iderisOrder = data.result.find(({ id }) => String(id) === String(iderisOrderId))
             if (iderisOrder) {
               const listEndpoint = `/orders.json?hidden_metafields.value=${iderisOrderId}_ideris` +
                 '&fields=_id,payments_history,fulfillments'
@@ -79,7 +79,6 @@ module.exports = ({ appSdk, storeId, auth }, iderisLoginToken, queueEntry, appDa
           }
         })
       handleJob({ appSdk, storeId }, queueEntry, job)
-      job.then(payload => console.log(`> Import order job: ${JSON.stringify(payload)}`)).catch(console.error)
     })
     .catch(console.error)
     .finally(resolve)
