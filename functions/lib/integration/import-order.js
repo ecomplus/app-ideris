@@ -15,7 +15,7 @@ const getLastStatusRecord = records => {
   return statusRecord
 }
 
-module.exports = ({ appSdk, storeId, auth }, iderisLoginToken, queueEntry, appData) => {
+module.exports = ({ appSdk, storeId, auth }, iderisLoginToken, queueEntry, appData) => new Promise(resolve => {
   const iderisOrderId = queueEntry.nextId
   const ideris = new Ideris(iderisLoginToken)
 
@@ -81,4 +81,5 @@ module.exports = ({ appSdk, storeId, auth }, iderisLoginToken, queueEntry, appDa
       handleJob({ appSdk, storeId }, queueEntry, job)
     })
     .catch(console.error)
-}
+    .finally(resolve)
+})
