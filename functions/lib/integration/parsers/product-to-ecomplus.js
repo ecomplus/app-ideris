@@ -134,25 +134,24 @@ module.exports = (iderisProduct, storeId, auth) => new Promise((resolve, reject)
             .replace(/\s+/g, '_')
             .replace(/[^a-z0-9_]/g, '')
             .substring(0, 30)
+            .padStart(2, 'i')
 
-          if (gridId.length >= 2) {
-            const variation = {
-              _id: ecomUtils.randomObjectId(),
-              name: `${name} / ${specText}`.substring(0, 100),
-              sku: skuVariacao,
-              quantity: quantidadeVariacao,
-              specifications: {
-                [gridId]: [{
-                  text: specText
-                }]
-              }
+          const variation = {
+            _id: ecomUtils.randomObjectId(),
+            name: `${name} / ${specText}`.substring(0, 100),
+            sku: skuVariacao,
+            quantity: quantidadeVariacao,
+            specifications: {
+              [gridId]: [{
+                text: specText
+              }]
             }
-            if (gridId !== 'colors') {
-              variation.specifications[gridId][0].value = removeAccents(specText.toLowerCase())
-                .substring(0, 100)
-            }
-            product.variations.push(variation)
           }
+          if (gridId !== 'colors') {
+            variation.specifications[gridId][0].value = removeAccents(specText.toLowerCase())
+              .substring(0, 100)
+          }
+          product.variations.push(variation)
         }
       }
     })
