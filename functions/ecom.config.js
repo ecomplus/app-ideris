@@ -207,7 +207,8 @@ const app = {
             type: 'array',
             items: {
               type: 'string',
-              title: 'SKU do produto no Ideris'
+              title: 'SKU do produto no Ideris',
+              description: 'ATENÇÃO: O produto será sobrescrito na plataforma se já existir com o mesmo SKU'
             }
           },
           order_ids: {
@@ -215,7 +216,8 @@ const app = {
             type: 'array',
             items: {
               type: 'string',
-              title: 'ID do pedido no Ideris'
+              title: 'ID do pedido no Ideris',
+              description: 'Número em "Nosso pedido" no painel do Ideris'
             }
           }
         }
