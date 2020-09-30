@@ -72,7 +72,7 @@ exports.post = ({ appSdk }, req, res) => {
                 }
                 integrationConfig = {
                   exportation: {
-                    product_ids: [resourceId]
+                    __product_ids: [resourceId]
                   }
                 }
               }
@@ -85,12 +85,13 @@ exports.post = ({ appSdk }, req, res) => {
               const action = actions[i]
               if (typeof integrationConfig[action] === 'object' && integrationConfig[action]) {
                 const queue = Object.keys(integrationConfig[action])[0]
+                const handler = integrationHandlers[action][queue.startsWith('__') ? queue.slice(2) : queue]
                 const ids = integrationConfig[action][queue]
-                if (Array.isArray(ids) && integrationHandlers[action][queue]) {
+                if (Array.isArray(ids) && handler) {
                   const nextId = ids[0]
                   if (typeof nextId === 'string' && nextId.length) {
                     console.log(`> Starting ${action} ${nextId}`)
-                    return integrationHandlers[action][queue](
+                    return handler(
                       { appSdk, storeId, auth },
                       iderisLoginToken,
                       { action, queue, nextId },

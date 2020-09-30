@@ -100,7 +100,7 @@ const queueImportOrders = (appSession, iderisIds) => {
   if (iderisIds && iderisIds.length) {
     return updateAppData(appSession, {
       importation: {
-        order_ids: iderisIds
+        __order_ids: iderisIds
       }
     })
   }
