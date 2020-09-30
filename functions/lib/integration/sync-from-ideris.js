@@ -82,10 +82,13 @@ const updateSavedOrders = ({ appSdk, storeId }, iderisIds = []) => {
     .then(querySnapshot => {
       querySnapshot.forEach(documentSnapshot => {
         const { iderisOrder } = documentSnapshot.data()
+        const timestamp = Date.now()
+        const orderUpdateTime = new Date(iderisOrder.data).getTime()
         if (
           iderisOrder &&
           iderisOrder.id &&
-          Date.now() - new Date(iderisOrder.data).getTime() <= 60 * 24 * 60 * 60 * 1000
+          timestamp - orderUpdateTime <= 60 * 24 * 60 * 60 * 1000 &&
+          timestamp - orderUpdateTime >= 6 * 60 * 1000
         ) {
           iderisIds.push(String(iderisOrder.id))
         } else {
