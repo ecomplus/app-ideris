@@ -33,8 +33,9 @@ const tryImageUpload = (storeId, auth, originImgUrl, product) => new Promise(res
                 delete data.picture[imgSize].size
               }
             }
-            resolve({
+            return resolve({
               _id: ecomUtils.randomObjectId(),
+              alt: product.name,
               ...data.picture
             })
           }
