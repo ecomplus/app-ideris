@@ -2,6 +2,73 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 1.0.0 (2020-09-30)
+
+
+### Features
+
+* **active-sync:** automatic fetch orders from ideris by date and handle import ([e184835](https://github.com/ecomplus/application-starter/commit/e1848358b5f4a6d0344b29a0653ae855ec207478))
+* **config:** admin settings for manual/auto sync ([45a4d4b](https://github.com/ecomplus/application-starter/commit/45a4d4b18331d44d85d65c0a8d5051e20b4dfd17))
+* **cron:** add scheduled cloud function to active sync from ideris api ([684ae02](https://github.com/ecomplus/application-starter/commit/684ae022f2f82df8be1eec82d93e3b5b731e549d))
+* **ecom-config:** initial app attributes and auth scope ([e65c9bc](https://github.com/ecomplus/application-starter/commit/e65c9bc14b0474307da12a5c3e0f68fbf1645a33))
+* **export-product:** handling product export from ecomplus to ideris ([299fdf2](https://github.com/ecomplus/application-starter/commit/299fdf2a2c5d894201a29ad2d6505557250e3fb1))
+* **ideris-client:** basic ideris api client and constructor with auth handler ([67d1a26](https://github.com/ecomplus/application-starter/commit/67d1a26dae9ee981b3888fd87c9694b8da94864d))
+* **import-order:** handling parse and import/update orders from ideris to ecomplus ([613eb11](https://github.com/ecomplus/application-starter/commit/613eb11eb3ba05025019c95f4077ba0183ade646))
+* **import-product:** handling product imports from ideris to ecomplus ([f494efc](https://github.com/ecomplus/application-starter/commit/f494efcd98b772bfe20966c49b5de5a2e6488cf4))
+* **integration:** handle log and retry after each integration job ([473a523](https://github.com/ecomplus/application-starter/commit/473a523c5a12737ee64e3ce01f7c653bb902fc66))
+* **store-api:** abstraction to update app data ([49e53c4](https://github.com/ecomplus/application-starter/commit/49e53c436301e5937cf2ed4de831efa19208617f))
+* **sync-from-ideris:** handling saved orders update ([9f294e5](https://github.com/ecomplus/application-starter/commit/9f294e5983a46d0b4cf7db33153f5950c77c6fdb))
+* **webhook:** handling app data changes to handle import/export manual triggers ([a5bef66](https://github.com/ecomplus/application-starter/commit/a5bef6646ce70396339bdc0e16b3a95d9dc33064))
+* **webhook:** handling product create/update triggers ([3670fc2](https://github.com/ecomplus/application-starter/commit/3670fc236bc1bc5ca87ae2f19d2b38634d8d2c3f))
+
+
+### Bug Fixes
+
+* **admin-settings:** simpler config schema (match current handlers) ([851c642](https://github.com/ecomplus/application-starter/commit/851c642ae318346a5651b80d15613f812344f387))
+* **admin-settings:** update settings fields due to ideris api limitations ([2a01725](https://github.com/ecomplus/application-starter/commit/2a01725aca40d6bd189aecf9ec0f6809c24e9a31))
+* **config:** add permissions to create new order ([da7c8d4](https://github.com/ecomplus/application-starter/commit/da7c8d41842eca4c39b1006418f383c8394b47b5))
+* **config:** update procedure triggers and integration settings to fit ideris limitations ([d642649](https://github.com/ecomplus/application-starter/commit/d6426499ebdd2813c6a7230eb1c50888a3bd5280))
+* **ecom-config:** update app scope, setup procedures and admin settings ([7cfd676](https://github.com/ecomplus/application-starter/commit/7cfd676685f41d403d360138a09fb143b7eab947))
+* **export-product:** checking additional images extensions limited by ideris ([dd2a315](https://github.com/ecomplus/application-starter/commit/dd2a315672b50c3bc53733d60c6f186701fc94b8))
+* **export-product:** checking images extensions limited by ideris ([4f710da](https://github.com/ecomplus/application-starter/commit/4f710da23253bbf577b640f0ddb441882e4bed77))
+* **export-product:** fix handling (bad) ideris api response on products search ([4311278](https://github.com/ecomplus/application-starter/commit/4311278f4b47de847c490caa8a5cce698668b92b))
+* **export-product:** fix handling (bad) ideris api response on products search ([30a932d](https://github.com/ecomplus/application-starter/commit/30a932d2666b1f843aa77f5a8598a24bbc99756c))
+* **export-product:** fix handling product update price and quantity ([24670b5](https://github.com/ecomplus/application-starter/commit/24670b57807d08e6095e0e4d254fb19e70b83aa4))
+* **export-product:** fix using `ideris.preparing` promise ([5de553f](https://github.com/ecomplus/application-starter/commit/5de553f67b1d26966bb466b81a6b76d17ba96306))
+* **export-product:** limit ideris field 'descricaoLonga' to 5000 chars ([711c533](https://github.com/ecomplus/application-starter/commit/711c53342fdb57ddde4bb94bc699316ef872267e))
+* **export-product:** limit ideris field 'titulo' string size ([3daefe5](https://github.com/ecomplus/application-starter/commit/3daefe512fbbfb286cb3b6c3b398296dac071ef4))
+* **export-products:** check ideris request body length ([711fa16](https://github.com/ecomplus/application-starter/commit/711fa1610fbc76b79033f62e109f394a56a84216))
+* **export-products:** check ideris request body length ([e46f42a](https://github.com/ecomplus/application-starter/commit/e46f42a489dd381c920ca1d3142a70fb1da2cebd))
+* **export-products:** code fix on product parser ([e34f48c](https://github.com/ecomplus/application-starter/commit/e34f48c76257039f49a01e904289aac2e8b9f8cb))
+* **export-products:** fix defining post handled job ([c2ff497](https://github.com/ecomplus/application-starter/commit/c2ff497457989e282b77252adcada1397731e9c5))
+* **exports:** prevent creating new when intended to update only ([cd83d27](https://github.com/ecomplus/application-starter/commit/cd83d2716e2ea2f2f682bd5a7c864433771a0cf6))
+* **handled-job:** small delay to re-queue failed integration action ([52397dc](https://github.com/ecomplus/application-starter/commit/52397dc56624d59544c18611a6dfd31b8ac77644))
+* **ideris-client:** fix calling login method ([4c5b610](https://github.com/ecomplus/application-starter/commit/4c5b6104deab9665316da8994557d4d96457268c))
+* **ideris-client:** must return axios instance ([68370d6](https://github.com/ecomplus/application-starter/commit/68370d67b72830dc0e1ba1df1cc78964c872d03b))
+* **ideris-client:** prevent undefined header prop ([9a1679d](https://github.com/ecomplus/application-starter/commit/9a1679dfaff2e1014707a8b9266d7a1cfdf5e264))
+* **ideris-login:** delay and retry on first error ([e0b948f](https://github.com/ecomplus/application-starter/commit/e0b948f6c182a85734169d3c21b7a19eedcfd825))
+* **import-order:** always return resolved promise ([8a6b994](https://github.com/ecomplus/application-starter/commit/8a6b99426dc5e247bb5c59b2625cccdd7275d1fb))
+* **import-order:** fix arguments to parse order function ([102fd78](https://github.com/ecomplus/application-starter/commit/102fd7891c1eadcb6c2ad053e17e1dc04d8ebd26))
+* **import-order:** fix arguments to parse order function (promise) ([fd30d9b](https://github.com/ecomplus/application-starter/commit/fd30d9ba9ca277c994c7434a351684531d43d139))
+* **import-order:** fix checking ideris order id (string) ([5086715](https://github.com/ecomplus/application-starter/commit/5086715f28c9506ba4758fce5388c483a13074e9))
+* **import-order:** throw error when ideris order is not found by id ([2322bf9](https://github.com/ecomplus/application-starter/commit/2322bf9a2070396f6c7bb62cf55b88255533da8a))
+* **import-orders:** fix checking last status to prevent duplications ([125514f](https://github.com/ecomplus/application-starter/commit/125514f553dfe3b52969f3cd79e3402226d68344))
+* **import-orders:** fix posting status records on subresources (no _id) ([ecd233f](https://github.com/ecomplus/application-starter/commit/ecd233fb271fcafdfdb63adf001cbef8aa73b066))
+* **import-orders:** fix returned payload for job ([060ce84](https://github.com/ecomplus/application-starter/commit/060ce84765f6a857b5aed6a90506fa9f97d31843))
+* **import-orders:** must push requests to promises array ([8ed8909](https://github.com/ecomplus/application-starter/commit/8ed89095411c455f7330ba62a8b5ee9d5ee5e811))
+* **import-orders:** prevent status duplication on update ([bc67f32](https://github.com/ecomplus/application-starter/commit/bc67f32a91e54c3a14fe80020e1be48504fd3cfe))
+* **import-product:** fix grid id with pad start ([fad1254](https://github.com/ecomplus/application-starter/commit/fad125461f4fa602c850d17113695c67e264baf7))
+* **import-product:** fix setting picture object after upload ([108b56a](https://github.com/ecomplus/application-starter/commit/108b56a574ab3c75f03f5d2ef439b630500cbd79))
+* **import-product:** minor fix handling image uploads ([2db0a1a](https://github.com/ecomplus/application-starter/commit/2db0a1ac43b281d721d3458883599915bded5b96))
+* **import-product:** minor fix handling variations ([65eb722](https://github.com/ecomplus/application-starter/commit/65eb722640efc8312a886b824357351f0ad5c80f))
+* **parse-product:** don't update main product stock for products with variations ([14b6efe](https://github.com/ecomplus/application-starter/commit/14b6efe1a16a2e3f592612e9029a6720970b3d72))
+* **post-job-handler:** prevent error with null payload ([a2ff208](https://github.com/ecomplus/application-starter/commit/a2ff208f1076cb532a0036f1978b5551080f5256))
+* **procedures:** update registered procedure triggers (orders and self data) ([057c667](https://github.com/ecomplus/application-starter/commit/057c6679be0a7d0089bcacbf1a92a6c1be2f82f4))
+* **sync:** using custom props (__) for background queue ([d735948](https://github.com/ecomplus/application-starter/commit/d735948b9645cf0374068cc8164115f2085baaeb))
+* **sync-from-ideris:** fix listing order ids from auth coll ([2d086c9](https://github.com/ecomplus/application-starter/commit/2d086c945e7a8f2e70d95a9a57ef906c7395bea3))
+* **webhook:** padding queue entry object to further retry on error ([84511d1](https://github.com/ecomplus/application-starter/commit/84511d13eb7c18964d92160dfaaa6eae24bb13d7))
+* **webhook:** properly calling integration handler with dynamic props ([bdf1632](https://github.com/ecomplus/application-starter/commit/bdf1632416817d731c1ce0aec513f8154f535b5e))
+
 ## [1.0.0-starter.15](https://github.com/ecomplus/application-starter/compare/v1.0.0-starter.14...v1.0.0-starter.15) (2020-07-26)
 
 
