@@ -31,7 +31,7 @@ module.exports = ({ appSdk, storeId, auth }, iderisLoginToken, queueEntry, appDa
                   documentSnapshot.exists &&
                   documentSnapshot.get('iderisOrder.status') === iderisOrder.status
                 ) {
-                  console.log(`> Skipping Ideris order ${iderisOrderId}`)
+                  // console.log(`> Skipping Ideris order ${iderisOrderId}`)
                   return null
                 }
 
