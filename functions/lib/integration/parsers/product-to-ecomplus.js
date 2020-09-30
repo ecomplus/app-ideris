@@ -166,15 +166,16 @@ module.exports = (iderisProduct, storeId, auth) => new Promise((resolve, reject)
           const promises = []
           for (let i = 0; i < iderisProduct.Variacao.length && promises.length < 7; i++) {
             const { caminhoImagemVariacao } = iderisProduct.Variacao[i]
+            const variation = product.variations[i]
             if (
               caminhoImagemVariacao &&
               typeof caminhoImagemVariacao === 'string' &&
-              product.variations[i] &&
+              variation &&
               caminhoImagemVariacao !== iderisProduct.caminhoImagem
             ) {
               promises.push(new Promise(resolve => setTimeout(() => {
                 tryImageUpload(storeId, auth, caminhoImagemVariacao, product).then(({ _id }) => {
-                  product.variations[i].picture_id = _id
+                  variation.picture_id = _id
                   resolve()
                 })
               }, (promises.length + 1) * 2000)))

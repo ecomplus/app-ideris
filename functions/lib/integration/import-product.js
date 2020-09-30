@@ -21,6 +21,7 @@ module.exports = ({ appSdk, storeId, auth }, iderisLoginToken, queueEntry, appDa
                 const endpoint = productId ? `/products/${productId}.json` : '/products.json'
                 const method = productId ? 'PATCH' : 'POST'
                 return parseProduct(iderisProduct, storeId, auth).then(product => {
+                  console.log(JSON.stringify(product))
                   return appSdk.apiRequest(storeId, endpoint, method, product, auth)
                 })
               }
