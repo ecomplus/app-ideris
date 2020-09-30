@@ -32,10 +32,10 @@ const tryImageUpload = (storeId, auth, originImgUrl, product) => new Promise(res
               if (data.picture[imgSize] && data.picture[imgSize].size !== undefined) {
                 delete data.picture[imgSize].size
               }
+              data.picture[imgSize].alt = `${product.name} (${imgSize})`
             }
             return resolve({
               _id: ecomUtils.randomObjectId(),
-              alt: product.name,
               ...data.picture
             })
           }
