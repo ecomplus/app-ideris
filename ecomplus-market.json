@@ -1,7 +1,7 @@
 {
   "app": {
-    "title": "",
-    "short_description": "",
-    "category": "tools"
+    "title": "Ideris",
+    "short_description": "Integração com marketplaces para controle de estoque e pedidos",
+    "category": "sales-channels"
   }
 }
