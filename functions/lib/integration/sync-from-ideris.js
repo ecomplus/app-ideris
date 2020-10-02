@@ -59,10 +59,10 @@ const fetchNewIderisOrders = ({ appSdk, storeId }) => {
                       }
                     })
                     if (iderisIds.length) {
-                      return updateSavedOrders({ appSdk, storeId }, iderisIds)
+                      return updateSavedOrders({ appSdk, storeId }, ideris, iderisIds)
                         .then(() => documentRef.set(data.result[data.result.length - 1]))
                     } else {
-                      return updateSavedOrders({ appSdk, storeId })
+                      return updateSavedOrders({ appSdk, storeId }, ideris)
                     }
                   }
                 })
@@ -75,11 +75,13 @@ const fetchNewIderisOrders = ({ appSdk, storeId }) => {
   })
 }
 
-const updateSavedOrders = ({ appSdk, storeId }, iderisIds = []) => {
+const updateSavedOrders = ({ appSdk, storeId }, ideris, iderisIds = []) => {
   return firestore()
     .collection('ideris_orders')
-    .where('storeId', '==', storeId).orderBy('updatedAt', 'asc').limit(6).get()
+    .where('storeId', '==', storeId).orderBy('updatedAt', 'asc').limit(50).get()
+
     .then(querySnapshot => {
+      const updateIderisIds = []
       querySnapshot.forEach(documentSnapshot => {
         const { iderisOrder } = documentSnapshot.data()
         const timestamp = Date.now()
@@ -87,16 +89,47 @@ const updateSavedOrders = ({ appSdk, storeId }, iderisIds = []) => {
         if (
           iderisOrder &&
           iderisOrder.id &&
-          timestamp - orderUpdateTime <= 60 * 24 * 60 * 60 * 1000 &&
-          timestamp - orderUpdateTime >= 6 * 60 * 1000
+          timestamp - orderUpdateTime <= 60 * 24 * 60 * 60 * 1000
         ) {
-          iderisIds.push(String(iderisOrder.id))
+          if (timestamp - orderUpdateTime >= 10 * 60 * 1000) {
+            updateIderisIds.push(String(iderisOrder.id))
+          }
         } else {
           documentSnapshot.ref.delete().catch(console.error)
         }
       })
-      return queueImportOrders({ appSdk, storeId }, iderisIds)
+
+      if (updateIderisIds.length) {
+        return ideris.axios.get(`/Pedido?ids=${updateIderisIds.join(',')}`)
+          .then(({ data }) => {
+            if (data && Array.isArray(data.result)) {
+              const promises = []
+              let countUpdateIds = 0
+              data.result.forEach(({ id, status }) => {
+                const promise = firestore().doc(`ideris_orders/${storeId}_${id}`)
+                  .get().then(documentSnapshot => {
+                    if (
+                      documentSnapshot.exists &&
+                      documentSnapshot.get('iderisOrder.status') === status
+                    ) {
+                      return null
+                    }
+                    if (countUpdateIds < 7) {
+                      iderisIds.push(String(id))
+                      countUpdateIds++
+                    }
+                    return true
+                  })
+                promises.push(promise)
+              })
+              return Promise.all(promises)
+            }
+          })
+      }
+      return true
     })
+
+    .then(() => queueImportOrders({ appSdk, storeId }, iderisIds))
 }
 
 const queueImportOrders = (appSession, iderisIds) => {
