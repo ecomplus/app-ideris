@@ -78,7 +78,7 @@ const fetchNewIderisOrders = ({ appSdk, storeId }) => {
 const updateSavedOrders = ({ appSdk, storeId }, ideris, iderisIds = []) => {
   return firestore()
     .collection('ideris_orders')
-    .where('storeId', '==', storeId).orderBy('updatedAt', 'asc').limit(50).get()
+    .where('storeId', '==', storeId).orderBy('updatedAt', 'asc').limit(20).get()
 
     .then(querySnapshot => {
       const updateIderisIds = []

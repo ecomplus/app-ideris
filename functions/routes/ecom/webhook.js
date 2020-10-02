@@ -36,7 +36,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
         return setTimeout(() => resolve({
           runningKey: documentSnapshot.get('key'),
           documentRef
-        }), 2000)
+        }), 3000)
       }
       documentRef.set({ key: '-' }).catch(console.error)
       resolve({ documentRef })
