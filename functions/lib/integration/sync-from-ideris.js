@@ -54,7 +54,7 @@ const fetchNewIderisOrders = ({ appSdk, storeId }) => {
                       iderisIds = []
                     }
                     data.result.forEach(({ id }) => {
-                      if (!lastId || lastId < id) {
+                      if ((!lastId || lastId < id) && iderisIds.indexOf(String(id)) === -1) {
                         iderisIds.push(String(id))
                       }
                     })
@@ -93,8 +93,13 @@ const updateSavedOrders = ({ appSdk, storeId }, ideris, iderisIds = []) => {
           iderisOrder.id &&
           timestamp - orderUpdateTime <= 60 * 24 * 60 * 60 * 1000
         ) {
-          if (timestamp - orderUpdateTime >= 10 * 60 * 1000) {
-            updateIderisIds.push(String(iderisOrder.id))
+          const id = String(iderisOrder.id)
+          if (
+            iderisIds.indexOf(id) === -1 &&
+            updateIderisIds.indexOf(id) === -1 &&
+            timestamp - orderUpdateTime >= 10 * 60 * 1000
+          ) {
+            updateIderisIds.push(id)
           }
         } else {
           documentSnapshot.ref.delete().catch(console.error)
