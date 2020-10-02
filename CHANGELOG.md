@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.1](https://github.com/ecomplus/application-starter/compare/v1.0.0...v1.0.1) (2020-10-02)
+
+
+### Bug Fixes
+
+* **webhooks:** save running proccess to firestore to prevent duplication ([97bd50e](https://github.com/ecomplus/application-starter/commit/97bd50ef00be64d6ddf98d1cf2b79ab24b8ce2b7))
+
 ## 1.0.0 (2020-09-30)
 
 
