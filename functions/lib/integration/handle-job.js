@@ -97,8 +97,12 @@ const log = ({ appSdk, storeId }, queueEntry, payload) => {
           if (queueEntry.documentRef && queueEntry.documentRef.get) {
             queueEntry.documentRef.get()
               .then(documentSnapshot => {
-                if (documentSnapshot.exists && documentSnapshot.get('key') === queueEntry.key) {
-                  return queueEntry.documentRef.delete()
+                if (documentSnapshot.exists) {
+                  const data = documentSnapshot.data()
+                  return queueEntry.documentRef.set({
+                    key: data.key === queueEntry.key ? '~' : data.key,
+                    count: data.count ? data.count - 1 : 0
+                  })
                 }
               })
               .catch(console.error)

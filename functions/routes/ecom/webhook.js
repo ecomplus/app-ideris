@@ -33,28 +33,35 @@ exports.post = ({ appSdk, admin }, req, res) => {
     documentRef.get()
 
       .then(documentSnapshot => new Promise(resolve => {
-        let count
-        if (documentSnapshot.exists) {
-          count = documentSnapshot.get('count')
-          if (count > 5) {
+        let runningCount, runningKey
+        if (
+          documentSnapshot.exists &&
+          Date.now() - documentSnapshot.updateTime.toDate().getTime() < 7000
+        ) {
+          runningCount = documentSnapshot.get('count')
+          if (runningCount > 5) {
             throw new Error('Too much requests')
-          } else if (count) {
-            count++
-          } else {
-            count = 1
           }
-          return setTimeout(() => resolve({
-            runningKey: documentSnapshot.get('key'),
-            documentRef
-          }), count * 7000)
-        } else {
-          count = 1
+          runningKey = documentSnapshot.get('key')
         }
-        documentRef.set({ key: '-', count }).catch(console.error)
-        resolve({ documentRef })
+        if (!runningCount) {
+          runningCount = 0
+          runningKey = '-'
+        }
+
+        documentRef.set({
+          key: runningKey,
+          count: runningCount + 1
+        }).catch(console.error)
+
+        setTimeout(() => resolve({
+          runningKey,
+          runningCount,
+          documentRef
+        }), runningCount * 7000 + 10)
       }))
 
-      .then(({ runningKey, documentRef }) => {
+      .then(({ runningKey, runningCount, documentRef }) => {
         // get app configured options
         appSdk.getAuth(storeId).then(auth => {
           return getAppData({ appSdk, storeId, auth })
@@ -123,7 +130,9 @@ exports.post = ({ appSdk, admin }, req, res) => {
                           runningKey !== key
                         ) {
                           console.log(`> Starting ${key}`)
-                          documentRef.set({ key }).catch(console.error)
+                          documentRef.set({ key, count: runningCount + 1 })
+                            .catch(console.error)
+
                           return handler(
                             { appSdk, storeId, auth },
                             iderisLoginToken,
