@@ -59,8 +59,10 @@ const fetchNewIderisOrders = ({ appSdk, storeId }) => {
                       }
                     })
                     if (iderisIds.length) {
-                      return updateSavedOrders({ appSdk, storeId }, ideris, iderisIds)
-                        .then(() => documentRef.set(data.result[data.result.length - 1]))
+                      const promise = iderisIds.length >= 7
+                        ? queueImportOrders({ appSdk, storeId }, iderisIds)
+                        : updateSavedOrders({ appSdk, storeId }, ideris, iderisIds)
+                      return promise.then(() => documentRef.set(data.result[data.result.length - 1]))
                     } else {
                       return updateSavedOrders({ appSdk, storeId }, ideris)
                     }
