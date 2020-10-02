@@ -28,7 +28,9 @@ const queueRetry = (appSession, { action, queue, nextId }, appData, response) =>
           [action]: {
             [queue]: queueList
           }
-        }).then(() => documentRef.set(response))
+        }).then(() => documentRef.set({
+          d: new Date().toISOString()
+        }))
       }, 3000)
     })
     .catch(console.error)
@@ -45,7 +47,7 @@ const log = ({ appSdk, storeId }, queueEntry, payload) => {
           }
           const isError = payload instanceof Error
           const logEntry = {
-            resource: queueEntry.queue.startsWith('order') ? 'orders' : 'products',
+            resource: /order/i.test(queueEntry.queue) ? 'orders' : 'products',
             [(queueEntry.action === 'importation' ? 'ideris_id' : 'resource_id')]: queueEntry.nextId,
             success: !isError,
             timestamp: new Date().toISOString()
@@ -84,6 +86,16 @@ const log = ({ appSdk, storeId }, queueEntry, payload) => {
           }
           if (notes) {
             logEntry.notes = notes.substring(0, 5000)
+          }
+
+          if (queueEntry.documentRef && queueEntry.documentRef.get) {
+            queueEntry.documentRef.get()
+              .then(documentSnapshot => {
+                if (documentSnapshot.exists && documentSnapshot.get('key') === queueEntry.key) {
+                  return queueEntry.documentRef.delete()
+                }
+              })
+              .catch(console.error)
           }
 
           logs.unshift(logEntry)
