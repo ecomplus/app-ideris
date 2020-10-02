@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.2](https://github.com/ecomplus/application-starter/compare/v1.0.1...v1.0.2) (2020-10-02)
+
+
+### Bug Fixes
+
+* **sync-ideris-orders:** prevent duplicated queued ids ([77471f2](https://github.com/ecomplus/application-starter/commit/77471f26b5b95b9fa029d63656e78a6986373e94))
+* **sync-orders:** documentation says 50, but ideris api limit is 20 order ids to list ([8b6bc1f](https://github.com/ecomplus/application-starter/commit/8b6bc1f925c953411f3cd5fb34c7d7783f1c56af))
+* **webhook:** count requests by store to bigger delay, add initial random delay ([b429178](https://github.com/ecomplus/application-starter/commit/b429178f6868d9b67a6a799901c2a46befcba54f))
+
 ### [1.0.1](https://github.com/ecomplus/application-starter/compare/v1.0.0...v1.0.1) (2020-10-02)
 
 
