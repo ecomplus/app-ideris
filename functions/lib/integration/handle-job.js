@@ -23,15 +23,21 @@ const queueRetry = (appSession, { action, queue, nextId }, appData, response) =>
         queueList = []
       }
       queueList.unshift(nextId)
-      return setTimeout(() => {
-        updateAppData(appSession, {
-          [action]: {
-            [queue]: queueList
-          }
-        }).then(() => documentRef.set({
-          d: new Date().toISOString()
-        }))
-      }, 3000)
+
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          updateAppData(appSession, {
+            [action]: {
+              [queue]: queueList
+            }
+          })
+            .then(() => documentRef.set({
+              d: new Date().toISOString()
+            }))
+            .then(resolve)
+            .catch(reject)
+        }, 7000)
+      })
     })
     .catch(console.error)
 }
@@ -100,7 +106,7 @@ const log = ({ appSdk, storeId }, queueEntry, payload) => {
 
           logs.unshift(logEntry)
           return updateAppData({ appSdk, storeId, auth }, {
-            logs: logs.slice(0, 300)
+            logs: logs.slice(0, 200)
           }, true)
         })
     })
