@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.3](https://github.com/ecomplus/application-starter/compare/v1.0.2...v1.0.3) (2020-10-03)
+
+
+### Bug Fixes
+
+* **parse-order:** add item to order even if product not found ([ec2b491](https://github.com/ecomplus/application-starter/commit/ec2b4919e32410d57a5b582d3c22e17ef9a35cdb))
+* **parse-order:** return item search promise on order parse chain ([4b6a4b2](https://github.com/ecomplus/application-starter/commit/4b6a4b255f2de4a810658c47672ab6f0635f0fb2))
+* **sync-ideris-orders:** ensure saving last order by id ([feb65b9](https://github.com/ecomplus/application-starter/commit/feb65b9ab6f0fbf6547775ec2ca2386cf12507b4))
+
 ### [1.0.2](https://github.com/ecomplus/application-starter/compare/v1.0.1...v1.0.2) (2020-10-02)
 
 
