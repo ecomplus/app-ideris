@@ -115,11 +115,11 @@ const updateSavedOrders = ({ appSdk, storeId }, ideris, iderisIds = []) => {
               data.result.forEach(({ id, status }) => {
                 const promise = firestore().doc(`ideris_orders/${storeId}_${id}`)
                   .get().then(documentSnapshot => {
-                    if (
-                      documentSnapshot.exists &&
-                      documentSnapshot.get('iderisOrder.status') === status
-                    ) {
-                      return null
+                    if (documentSnapshot.exists) {
+                      console.log(documentSnapshot.get('iderisOrder.status'), status)
+                      if (documentSnapshot.get('iderisOrder.status') === status) {
+                        return null
+                      }
                     }
                     if (countUpdateIds < 7) {
                       iderisIds.push(String(id))
