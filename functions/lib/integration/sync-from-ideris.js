@@ -141,6 +141,7 @@ const updateSavedOrders = ({ appSdk, storeId }, ideris, iderisIds = []) => {
 
 const queueImportOrders = (appSession, iderisIds) => {
   if (iderisIds && iderisIds.length) {
+    console.log(iderisIds)
     return updateAppData(appSession, {
       importation: {
         __order_ids: iderisIds
