@@ -43,6 +43,12 @@ const queueRetry = (appSession, { action, queue, nextId }, appData, response) =>
 }
 
 const log = ({ appSdk, storeId }, queueEntry, payload) => {
+  const isError = payload instanceof Error
+  const isImportation = queueEntry.action === 'importation'
+  if (!isError && isImportation) {
+    return null
+  }
+
   appSdk.getAuth(storeId)
     .then(auth => {
       return getAppData({ appSdk, storeId, auth })
@@ -51,10 +57,9 @@ const log = ({ appSdk, storeId }, queueEntry, payload) => {
           if (!Array.isArray(logs)) {
             logs = []
           }
-          const isError = payload instanceof Error
           const logEntry = {
             resource: /order/i.test(queueEntry.queue) ? 'orders' : 'products',
-            [(queueEntry.action === 'importation' ? 'ideris_id' : 'resource_id')]: queueEntry.nextId,
+            [(isImportation ? 'ideris_id' : 'resource_id')]: queueEntry.nextId,
             success: !isError,
             timestamp: new Date().toISOString()
           }
