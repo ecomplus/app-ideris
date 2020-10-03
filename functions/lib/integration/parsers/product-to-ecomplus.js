@@ -115,7 +115,7 @@ module.exports = (iderisProduct, storeId, auth) => new Promise((resolve, reject)
       }
       product.dimensions[side] = {
         unit: 'cm',
-        value: dimension
+        value: parseFloat(dimension)
       }
     }
   })
