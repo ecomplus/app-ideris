@@ -221,5 +221,5 @@
     }
   },
   "auth_callback_uri": "https://us-central1-ecom-ideris.cloudfunctions.net/app/ecom/auth-callback",
-  "version": "1.0.2"
+  "version": "1.0.3"
 }
