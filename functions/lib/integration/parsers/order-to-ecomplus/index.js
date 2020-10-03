@@ -128,7 +128,9 @@ module.exports = (iderisOrder, storeId, appData) => new Promise((resolve, reject
             methodName = 'Cartão de débito'
             break
           case 'balance_on_intermediary':
+          case 'account_money':
             methodName = 'Crédito no intermediador'
+            methodCode = 'balance_on_intermediary'
             break
           case 'loyalty_points':
             methodName = 'Pontos'
@@ -189,39 +191,40 @@ module.exports = (iderisOrder, storeId, appData) => new Promise((resolve, reject
       ecomClient.search({
         url: `/items.json?q=${encodeURIComponent(query)}`
       }).then(({ data }) => {
+        const item = {
+          _id: ecomUtils.randomObjectId(),
+          name: tituloProdutoItem,
+          sku: skuProdutoItem,
+          quantity: quantidadeItem,
+          price: precoUnitarioItem,
+          final_price: precoUnitarioItem,
+          flags: [`ideris-${codigoProdutoItem}`.substring(0, 20)]
+        }
+        if (caminhoImagemItem) {
+          item.picture = {
+            zoom: {
+              url: caminhoImagemItem
+            }
+          }
+        }
+
         if (Array.isArray(data.hits.hits) && data.hits.hits.length) {
           const { _id, sku, variations } = (
             data.hits.hits.find(({ _source }) => _source.sku === skuProdutoItem) ||
             data.hits.hits[0]
           )._source
-
-          const item = {
-            _id: ecomUtils.randomObjectId(),
-            product_id: _id,
-            name: tituloProdutoItem,
-            sku: skuProdutoItem,
-            quantity: quantidadeItem,
-            price: precoUnitarioItem,
-            final_price: precoUnitarioItem,
-            flags: [`ideris-${codigoProdutoItem}`.substring(0, 20)]
-          }
-
+          item.product_id = _id
           if (sku !== skuProdutoItem && variations) {
             const variation = variations.find(({ sku }) => sku === skuProdutoItem)
             if (variation) {
               item.variation_id = variation._id
             }
           }
-          if (caminhoImagemItem) {
-            item.picture = {
-              zoom: {
-                url: caminhoImagemItem
-              }
-            }
-          }
-
-          order.items.push(item)
+        } else {
+          item.product_id = ecomUtils.randomObjectId()
         }
+
+        order.items.push(item)
       })
     })).then(() => resolve(order)).catch(reject)
   }
