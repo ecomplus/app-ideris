@@ -53,16 +53,21 @@ const fetchNewIderisOrders = ({ appSdk, storeId }) => {
                     if (!Array.isArray(iderisIds)) {
                       iderisIds = []
                     }
-                    data.result.forEach(({ id }) => {
+                    let lastIderisOrder
+                    data.result.forEach(iderisOrder => {
+                      const { id } = iderisOrder
                       if ((!lastId || lastId < id) && iderisIds.indexOf(String(id)) === -1) {
                         iderisIds.push(String(id))
+                        if (!lastIderisOrder || lastIderisOrder.id < id) {
+                          lastIderisOrder = iderisOrder
+                        }
                       }
                     })
                     if (iderisIds.length) {
                       const promise = iderisIds.length >= 7
                         ? queueImportOrders({ appSdk, storeId }, iderisIds)
                         : updateSavedOrders({ appSdk, storeId }, ideris, iderisIds)
-                      return promise.then(() => documentRef.set(data.result[data.result.length - 1]))
+                      return promise.then(() => documentRef.set(lastIderisOrder))
                     } else {
                       return updateSavedOrders({ appSdk, storeId }, ideris)
                     }
@@ -115,11 +120,11 @@ const updateSavedOrders = ({ appSdk, storeId }, ideris, iderisIds = []) => {
               data.result.forEach(({ id, status }) => {
                 const promise = firestore().doc(`ideris_orders/${storeId}_${id}`)
                   .get().then(documentSnapshot => {
-                    if (documentSnapshot.exists) {
-                      console.log(documentSnapshot.get('iderisOrder.status'), status)
-                      if (documentSnapshot.get('iderisOrder.status') === status) {
-                        return null
-                      }
+                    if (
+                      documentSnapshot.exists &&
+                      documentSnapshot.get('iderisOrder.status') === status
+                    ) {
+                      return null
                     }
                     if (countUpdateIds < 7) {
                       iderisIds.push(String(id))
@@ -141,7 +146,7 @@ const updateSavedOrders = ({ appSdk, storeId }, ideris, iderisIds = []) => {
 
 const queueImportOrders = (appSession, iderisIds) => {
   if (iderisIds && iderisIds.length) {
-    console.log(iderisIds)
+    console.log(`> #${appSession.storeId} orders: ${JSON.stringify(iderisIds)}`)
     return updateAppData(appSession, {
       importation: {
         __order_ids: iderisIds
