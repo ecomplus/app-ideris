@@ -188,7 +188,7 @@ module.exports = (iderisOrder, storeId, appData) => new Promise((resolve, reject
         query += ` OR sku:"${skuProdutoItem.replace(/-\d{0,2}$/, '')}"`
       }
 
-      ecomClient.search({
+      return ecomClient.search({
         url: `/items.json?q=${encodeURIComponent(query)}`
       }).then(({ data }) => {
         const item = {
@@ -225,6 +225,7 @@ module.exports = (iderisOrder, storeId, appData) => new Promise((resolve, reject
         }
 
         order.items.push(item)
+        return item
       })
     })).then(() => resolve(order)).catch(reject)
   }
