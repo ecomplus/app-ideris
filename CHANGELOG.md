@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.6](https://github.com/ecomplus/application-starter/compare/v1.0.5...v1.0.6) (2020-10-07)
+
+
+### Bug Fixes
+
+* **parse-order:** set random product id for items not found ([c0ef0ac](https://github.com/ecomplus/application-starter/commit/c0ef0acb61ab37f1671c0af973a7990bf8f54102))
+
 ### [1.0.5](https://github.com/ecomplus/application-starter/compare/v1.0.4...v1.0.5) (2020-10-07)
 
 
