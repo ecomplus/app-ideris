@@ -192,7 +192,11 @@ module.exports = (iderisOrder, storeId, appData) => new Promise((resolve, reject
         final_price: precoUnitarioItem,
         flags: [`ideris-${codigoProdutoItem}`.substring(0, 20)]
       }
+
       const addItem = () => {
+        if (!item.product_id) {
+          item.product_id = ecomUtils.randomObjectId()
+        }
         order.items.push(item)
         return item
       }
@@ -226,8 +230,6 @@ module.exports = (iderisOrder, storeId, appData) => new Promise((resolve, reject
                 item.variation_id = variation._id
               }
             }
-          } else {
-            item.product_id = ecomUtils.randomObjectId()
           }
 
           return addItem()
