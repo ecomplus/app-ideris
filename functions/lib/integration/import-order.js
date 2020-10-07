@@ -60,7 +60,7 @@ module.exports = ({ appSdk, storeId, auth }, iderisLoginToken, queueEntry, appDa
                     ].forEach(([newStatus, subresource]) => {
                       if (
                         newStatus &&
-                        (!order[subresource] || getLastStatus(order[subresource]) !== financialStatus)
+                        (!order[subresource] || getLastStatus(order[subresource]) !== newStatus)
                       ) {
                         data.status = newStatus
                         const endpoint = `/orders/${order._id}/${subresource}.json`
