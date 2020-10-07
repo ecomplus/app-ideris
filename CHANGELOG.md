@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.5](https://github.com/ecomplus/application-starter/compare/v1.0.4...v1.0.5) (2020-10-07)
+
+
+### Bug Fixes
+
+* **import-order:** fix checking last status for fulfillments ([42217eb](https://github.com/ecomplus/application-starter/commit/42217eb3ede37210765c414c6f29208610049712))
+* **parse-order:** fix handling items, sku may by null from ideris ([3ea1263](https://github.com/ecomplus/application-starter/commit/3ea1263fb9c7feece97daeaf89c493a60079a9a4))
+
 ### [1.0.4](https://github.com/ecomplus/application-starter/compare/v1.0.3...v1.0.4) (2020-10-03)
 
 
