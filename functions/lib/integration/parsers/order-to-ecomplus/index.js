@@ -183,50 +183,58 @@ module.exports = (iderisOrder, storeId, appData) => new Promise((resolve, reject
       quantidadeItem,
       precoUnitarioItem
     }) => {
-      let query = `sku:"${skuProdutoItem}" OR variations.sku:"${skuProdutoItem}"`
-      if (/-\d{0,2}$/.test(skuProdutoItem)) {
-        query += ` OR sku:"${skuProdutoItem.replace(/-\d{0,2}$/, '')}"`
+      const item = {
+        _id: ecomUtils.randomObjectId(),
+        name: tituloProdutoItem,
+        sku: String(skuProdutoItem),
+        quantity: quantidadeItem,
+        price: precoUnitarioItem,
+        final_price: precoUnitarioItem,
+        flags: [`ideris-${codigoProdutoItem}`.substring(0, 20)]
       }
-
-      return ecomClient.search({
-        url: `/items.json?q=${encodeURIComponent(query)}`
-      }).then(({ data }) => {
-        const item = {
-          _id: ecomUtils.randomObjectId(),
-          name: tituloProdutoItem,
-          sku: skuProdutoItem,
-          quantity: quantidadeItem,
-          price: precoUnitarioItem,
-          final_price: precoUnitarioItem,
-          flags: [`ideris-${codigoProdutoItem}`.substring(0, 20)]
-        }
-        if (caminhoImagemItem) {
-          item.picture = {
-            zoom: {
-              url: caminhoImagemItem
-            }
-          }
-        }
-
-        if (Array.isArray(data.hits.hits) && data.hits.hits.length) {
-          const { _id, sku, variations } = (
-            data.hits.hits.find(({ _source }) => _source.sku === skuProdutoItem) ||
-            data.hits.hits[0]
-          )._source
-          item.product_id = _id
-          if (sku !== skuProdutoItem && variations) {
-            const variation = variations.find(({ sku }) => sku === skuProdutoItem)
-            if (variation) {
-              item.variation_id = variation._id
-            }
-          }
-        } else {
-          item.product_id = ecomUtils.randomObjectId()
-        }
-
+      const addItem = () => {
         order.items.push(item)
         return item
-      })
+      }
+
+      if (skuProdutoItem) {
+        let query = `sku:"${skuProdutoItem}" OR variations.sku:"${skuProdutoItem}"`
+        if (/-\d{0,2}$/.test(skuProdutoItem)) {
+          query += ` OR sku:"${skuProdutoItem.replace(/-\d{0,2}$/, '')}"`
+        }
+
+        return ecomClient.search({
+          url: `/items.json?q=${encodeURIComponent(query)}`
+        }).then(({ data }) => {
+          if (caminhoImagemItem) {
+            item.picture = {
+              zoom: {
+                url: caminhoImagemItem
+              }
+            }
+          }
+
+          if (Array.isArray(data.hits.hits) && data.hits.hits.length) {
+            const { _id, sku, variations } = (
+              data.hits.hits.find(({ _source }) => _source.sku === skuProdutoItem) ||
+              data.hits.hits[0]
+            )._source
+            item.product_id = _id
+            if (sku !== skuProdutoItem && variations) {
+              const variation = variations.find(({ sku }) => sku === skuProdutoItem)
+              if (variation) {
+                item.variation_id = variation._id
+              }
+            }
+          } else {
+            item.product_id = ecomUtils.randomObjectId()
+          }
+
+          return addItem()
+        })
+      }
+
+      return addItem()
     })).then(() => resolve(order)).catch(reject)
   }
 
