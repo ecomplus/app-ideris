@@ -6,7 +6,7 @@ module.exports = (iderisOrder, storeId, appData) => new Promise((resolve, reject
   const buyer = {
     _id: ecomUtils.randomObjectId(),
     locale: 'pt_br',
-    main_email: iderisOrder.compradorEmail,
+    main_email: iderisOrder.compradorEmail || 'sem_email@ideris.app',
     display_name: iderisOrder.compradorApelido,
     name: {
       family_name: iderisOrder.compradorSobrenome,
