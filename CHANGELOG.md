@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.7](https://github.com/ecomplus/application-starter/compare/v1.0.6...v1.0.7) (2020-10-18)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies ([#6](https://github.com/ecomplus/application-starter/issues/6)) ([49913d7](https://github.com/ecomplus/application-starter/commit/49913d750ac247eb3e7c9c836bbcd998674996b1))
+* **parse-order:** set generic email for customer if empty ([d1e9de6](https://github.com/ecomplus/application-starter/commit/d1e9de6a2c5e24bdc0df7fc082757818867da0b7))
+
 ### [1.0.6](https://github.com/ecomplus/application-starter/compare/v1.0.5...v1.0.6) (2020-10-07)
 
 
