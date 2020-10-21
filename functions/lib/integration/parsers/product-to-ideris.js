@@ -95,7 +95,7 @@ module.exports = (product, iderisProductId, appData) => {
     product.variations.forEach((variation, i) => {
       const iderisVariation = {
         skuVariacao: variation.sku || `${product.sku}-${(i + 1)}`,
-        quantidadeVariacao: variation.quantity || product.quantity || 1
+        quantidadeVariacao: variation.quantity || 0
       }
       if (!iderisProductId) {
         const spec = Object.keys(variation.specifications)[0]
