@@ -114,9 +114,6 @@ const app = {
      * Set above 'quantity' and 'price' subresources if you don't need access for full product document.
      * Stock and price management only.
      */
-    'products/inventory_records': [
-      'POST'           // Create entry to product inventory
-    ],
     'products/quantity': [
       // 'GET',           // Read product available quantity
       'PUT',           // Set product stock quantity
@@ -339,7 +336,6 @@ procedures.push({
       resource: 'orders',
       action: 'create',
     },
-    */
 
     // Receive notifications when order financial/fulfillment status changes:
     {
@@ -350,6 +346,7 @@ procedures.push({
       resource: 'orders',
       field: 'fulfillment_status',
     },
+    */
 
     // Receive notifications when products/variations stock quantity changes:
     {
