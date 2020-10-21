@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.8](https://github.com/ecomplus/application-starter/compare/v1.0.7...v1.0.8) (2020-10-21)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies ([#7](https://github.com/ecomplus/application-starter/issues/7)) ([d31d883](https://github.com/ecomplus/application-starter/commit/d31d883a3ddf97a824761691bad7c0f2d8dc4a61))
+* **export-product:** fix setting variations quantity ([da4d311](https://github.com/ecomplus/application-starter/commit/da4d311a17a6fef780194e6a0eb25ddb133fac9a))
+* **post-job-handler:** edit status for retry to > 419 ([105bdc4](https://github.com/ecomplus/application-starter/commit/105bdc435a6e39cc8ddc799a3be0030a6b72a418))
+* **sync-from-ideris:** preset queued order ids correctly (fix nested field name) ([dc434c0](https://github.com/ecomplus/application-starter/commit/dc434c01b800b35edfac19f949f4101e8a1b2d25))
+
 ### [1.0.7](https://github.com/ecomplus/application-starter/compare/v1.0.6...v1.0.7) (2020-10-18)
 
 
