@@ -75,7 +75,14 @@ const fetchNewIderisOrders = ({ appSdk, storeId }) => {
                 })
             })
 
-            .catch(console.error)
+            .catch(err => {
+              const { response, config } = err
+              if (response && response.status === 401 && config && config.url.endsWith('/Login')) {
+                console.log(`> Unauthorized Ideris token #${storeId}  ${iderisLoginToken}`)
+              } else {
+                console.error(err)
+              }
+            })
         }
       })
       .catch(reject)
