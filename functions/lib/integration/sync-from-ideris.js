@@ -49,7 +49,7 @@ const fetchNewIderisOrders = ({ appSdk, storeId }) => {
               return ideris.axios.get(`/ListaPedido?dataInicial=${dateStart.toISOString()}`)
                 .then(({ data }) => {
                   if (data && Array.isArray(data.result)) {
-                    let iderisIds = appData.importation && appData.importation.order_ids
+                    let iderisIds = appData.importation && appData.importation.__order_ids
                     if (!Array.isArray(iderisIds)) {
                       iderisIds = []
                     }
