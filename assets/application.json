@@ -33,9 +33,6 @@
       "GET",
       "POST"
     ],
-    "products/inventory_records": [
-      "POST"
-    ],
     "products/quantity": [
       "PUT"
     ],
@@ -221,5 +218,5 @@
     }
   },
   "auth_callback_uri": "https://us-central1-ecom-ideris.cloudfunctions.net/app/ecom/auth-callback",
-  "version": "1.0.6"
+  "version": "1.0.7"
 }
