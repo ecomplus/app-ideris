@@ -208,6 +208,7 @@ module.exports = (iderisOrder, storeId, appData) => new Promise((resolve, reject
         }
 
         return ecomClient.search({
+          storeId,
           url: `/items.json?q=${encodeURIComponent(query)}`
         }).then(({ data }) => {
           if (caminhoImagemItem) {

@@ -6,6 +6,7 @@ const handleJob = require('./handle-job')
 module.exports = ({ appSdk, storeId, auth }, iderisLoginToken, queueEntry, appData) => {
   const sku = queueEntry.nextId
   return ecomClient.search({
+    storeId,
     url: `/items.json?q=${encodeURIComponent(`sku:"${sku}"`)}`
   }).then(({ data }) => {
     const productId = Array.isArray(data.hits.hits) && data.hits.hits[0] && data.hits.hits[0]._id
