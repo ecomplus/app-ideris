@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.10](https://github.com/ecomplus/application-starter/compare/v1.0.9...v1.0.10) (2020-11-05)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies ([#11](https://github.com/ecomplus/application-starter/issues/11)) ([66290b2](https://github.com/ecomplus/application-starter/commit/66290b28657a2dc222548a766dcb6b234130544f))
+* **refresh-tokens:** add scheduled cloud function to run update ([af43c14](https://github.com/ecomplus/application-starter/commit/af43c147d59ce4cbbf341fbf78dca4fc91786d08))
+* **sync:** back with sync from ideris scheduled function ([cb5556e](https://github.com/ecomplus/application-starter/commit/cb5556e5da4561904889a6a740e5dfea74307d33))
+
 ### [1.0.9](https://github.com/ecomplus/application-starter/compare/v1.0.8...v1.0.9) (2020-10-26)
 
 
