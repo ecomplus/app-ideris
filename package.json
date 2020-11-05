@@ -1,5 +1,5 @@
 {
-  "name": "@ecomplus/application-starter",
+  "name": "@ecomplus/app-ideris",
   "private": true,
   "version": "1.0.9",
   "description": "Boilerplate for E-Com Plus apps with Firebase Cloud Functions",
