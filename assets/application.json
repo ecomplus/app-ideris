@@ -15,7 +15,8 @@
     ],
     "products": [
       "GET",
-      "POST"
+      "POST",
+      "PATCH"
     ],
     "brands": [],
     "categories": [],
@@ -218,5 +219,5 @@
     }
   },
   "auth_callback_uri": "https://us-central1-ecom-ideris.cloudfunctions.net/app/ecom/auth-callback",
-  "version": "1.0.9"
+  "version": "1.0.11"
 }
