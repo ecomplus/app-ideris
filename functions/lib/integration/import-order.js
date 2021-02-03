@@ -52,7 +52,7 @@ module.exports = ({ appSdk, storeId, auth }, iderisLoginToken, queueEntry, appDa
                     const promises = []
                     const data = {
                       date_time: new Date().toISOString(),
-                      flags: ['from-ideris']
+                      flags: ['from-ideris', 'ideris:' + iderisOrder.status.substring(0, 12)]
                     }
                     ;[
                       [financialStatus, 'payments_history'],
