@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.11](https://github.com/ecomplus/application-starter/compare/v1.0.10...v1.0.11) (2021-02-03)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies ([#13](https://github.com/ecomplus/application-starter/issues/13)) ([2c1f51e](https://github.com/ecomplus/application-starter/commit/2c1f51e68603cbdd8966fefa149f1f0e565f3ce1))
+* **ecom-config:** add PATCH products to auth scope ([0249854](https://github.com/ecomplus/application-starter/commit/0249854c17838f477ebff7b8ccb2037642054301))
+
 ### [1.0.10](https://github.com/ecomplus/application-starter/compare/v1.0.9...v1.0.10) (2020-11-05)
 
 
