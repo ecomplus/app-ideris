@@ -112,7 +112,7 @@ const fetchIderisUpdates = ({ appSdk, storeId }) => {
                         for (let i = 0; i < iderisUpdates.length && i < 20; i++) {
                           const { skuPrincipal, qtdeAtual } = iderisUpdates[i]
                           try {
-                            const item = fetchItemBySku(storeId, skuPrincipal)
+                            const item = await fetchItemBySku(storeId, skuPrincipal)
                             if (item) {
                               let quantity = parseInt(qtdeAtual, 10)
                               if (!quantity || quantity < 0) {
