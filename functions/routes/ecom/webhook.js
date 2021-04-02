@@ -91,8 +91,9 @@ exports.post = ({ appSdk, admin }, req, res) => {
                     integrationConfig = appData
                     canCreateNew = true
                     break
+
                   case 'products':
-                    if (trigger.body) {
+                    if (trigger.body && trigger.authentication_id !== auth.myId) {
                       if (trigger.action === 'create') {
                         if (!appData.new_products) {
                           break
