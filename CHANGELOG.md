@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.12](https://github.com/ecomplus/application-starter/compare/v1.0.11...v1.0.12) (2021-04-02)
+
+
+### Bug Fixes
+
+* **deps:** update @ecomplus/application-sdk to v22.0.0-firestore.1.14.3 ([0767c87](https://github.com/ecomplus/application-starter/commit/0767c87676a19284c7bf542c37e227632df554e0))
+* **deps:** update all non-major dependencies ([#19](https://github.com/ecomplus/application-starter/issues/19)) ([f78f68b](https://github.com/ecomplus/application-starter/commit/f78f68b4e4b422c46ff9ec26dbd49c9a167bf87b))
+* **sync-from-ideris:** ensure quantity set is valid when updating stock ([a9e5cff](https://github.com/ecomplus/application-starter/commit/a9e5cff3982c7eb5e6269ee944deecd40cde5a3e))
+* **update-tokens:** edit cron to run each 3h interval ([bd6454a](https://github.com/ecomplus/application-starter/commit/bd6454a29372881768f4d7125352ac5e0b969246))
+
 ### [1.0.11](https://github.com/ecomplus/application-starter/compare/v1.0.10...v1.0.11) (2021-02-03)
 
 
