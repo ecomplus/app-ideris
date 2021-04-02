@@ -79,7 +79,7 @@ const fetchIderisUpdates = ({ appSdk, storeId }) => {
               }
 
               return ideris.axios.get('/MovimentoProduto?horasRetroativas=6')
-                .then(async ({ data }) => {
+                .then(({ data }) => {
                   if (data && Array.isArray(data.result)) {
                     const iderisUpdates = []
                     data.result
@@ -106,38 +106,39 @@ const fetchIderisUpdates = ({ appSdk, storeId }) => {
                         }
                       })
 
-                    let lastIderisOrder
-                    for (let i = 0; i < iderisUpdates.length && i < 20; i++) {
-                      const { skuPrincipal, qtdeAtual } = iderisUpdates[i]
-                      try {
-                        const item = fetchItemBySku(storeId, skuPrincipal)
-                        if (item) {
-                          let quantity = parseInt(qtdeAtual, 10)
-                          if (!quantity || quantity < 0) {
-                            quantity = 0
+                    if (iderisUpdates.length) {
+                      return appSdk.getAuth(storeId).then(async auth => {
+                        let lastIderisOrder
+                        for (let i = 0; i < iderisUpdates.length && i < 20; i++) {
+                          const { skuPrincipal, qtdeAtual } = iderisUpdates[i]
+                          try {
+                            const item = fetchItemBySku(storeId, skuPrincipal)
+                            if (item) {
+                              let quantity = parseInt(qtdeAtual, 10)
+                              if (!quantity || quantity < 0) {
+                                quantity = 0
+                              }
+                              const variation = item.variations && item.variations
+                                .find(({ sku }) => sku === skuPrincipal)
+                              let endpoint = `/products/${item._id}`
+                              if (variation) {
+                                endpoint += `/variations/${variation._id}`
+                              }
+                              endpoint += '/quantity.json'
+                              await appSdk.apiRequest(storeId, endpoint, 'PUT', { quantity }, auth)
+                              console.log(`> #${storeId} sync SKU ${skuPrincipal}`)
+                              lastIderisOrder = iderisUpdates[i]
+                            }
+                          } catch (err) {
+                            console.error(err)
+                            i = 999
                           }
-                          const variation = item.variations && item.variations
-                            .find(({ sku }) => sku === skuPrincipal)
-                          let endpoint = `/products/${item._id}`
-                          if (variation) {
-                            endpoint += `/variations/${variation._id}`
-                          }
-                          await ecomClient.store({
-                            url: `${endpoint}/quantity.json`,
-                            method: 'put',
-                            data: { quantity }
-                          })
-                          console.log(`> #${storeId} sync SKU ${skuPrincipal}`)
-                          lastIderisOrder = iderisUpdates[i]
                         }
-                      } catch (err) {
-                        console.error(err)
-                        i = 999
-                      }
-                    }
 
-                    if (lastIderisOrder) {
-                      return documentRef.set(lastIderisOrder)
+                        if (lastIderisOrder) {
+                          return documentRef.set(lastIderisOrder)
+                        }
+                      })
                     }
                   }
                 })
