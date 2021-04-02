@@ -74,7 +74,7 @@ const fetchIderisUpdates = ({ appSdk, storeId }) => {
             .then(documentSnapshot => {
               let lastDate, lastId
               if (documentSnapshot.exists) {
-                lastDate = new Date(documentSnapshot.get('dataHora'))
+                lastDate = documentSnapshot.get('dataHora')
                 lastId = documentSnapshot.get('idInternoProduto')
               }
 
