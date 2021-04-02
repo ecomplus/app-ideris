@@ -1,7 +1,7 @@
 const { firestore } = require('firebase-admin')
+const ecomClient = require('@ecomplus/client')
 const { setup } = require('@ecomplus/application-sdk')
 const getAppData = require('../store-api/get-app-data')
-const updateAppData = require('./../../lib/store-api/update-app-data')
 const Ideris = require('../ideris/constructor')
 
 const listStoreIds = () => {
@@ -23,7 +23,42 @@ const listStoreIds = () => {
     })
 }
 
-const fetchNewIderisOrders = ({ appSdk, storeId }) => {
+const fetchItemBySku = (storeId, sku) => ecomClient.search({
+  storeId,
+  url: '/items.json',
+  data: {
+    query: {
+      bool: {
+        should: [{
+          term: { sku }
+        }, {
+          nested: {
+            path: 'variations',
+            query: {
+              bool: {
+                filter: [{
+                  term: { 'variations.sku': sku }
+                }]
+              }
+            }
+          }
+        }]
+      }
+    }
+  }
+}).then(({ data }) => {
+  const hit = Array.isArray(data.hits.hits) && data.hits.hits[0] && data.hits.hits[0]
+  if (hit) {
+    const { _id, _source } = hit
+    return {
+      _id,
+      ..._source
+    }
+  }
+  return null
+})
+
+const fetchIderisUpdates = ({ appSdk, storeId }) => {
   return new Promise((resolve, reject) => {
     getAppData({ appSdk, storeId })
       .then(appData => {
@@ -31,45 +66,75 @@ const fetchNewIderisOrders = ({ appSdk, storeId }) => {
 
         const iderisLoginToken = appData.ideris_login_token
         if (typeof iderisLoginToken === 'string' && iderisLoginToken) {
-          const documentRef = firestore().doc(`ideris_last_order/${storeId}_${iderisLoginToken}`)
+          const documentRef = firestore().doc(`ideris_last_update/${storeId}_${iderisLoginToken}`)
           const ideris = new Ideris(iderisLoginToken)
           ideris.preparing
             .then(() => documentRef.get())
 
             .then(documentSnapshot => {
-              let dateStart, lastId
+              let lastDate, lastId
               if (documentSnapshot.exists) {
-                dateStart = new Date(documentSnapshot.get('data'))
-                lastId = documentSnapshot.get('id')
-              } else {
-                dateStart = new Date()
-                dateStart.setMinutes(dateStart.getMinutes() - 5)
+                lastDate = new Date(documentSnapshot.get('dataHora'))
+                lastId = documentSnapshot.get('idInternoProduto')
               }
 
-              return ideris.axios.get(`/ListaPedido?dataInicial=${dateStart.toISOString()}`)
-                .then(({ data }) => {
+              return ideris.axios.get('/MovimentoProduto?horasRetroativas=6')
+                .then(async ({ data }) => {
                   if (data && Array.isArray(data.result)) {
-                    let iderisIds = appData.importation && appData.importation.__order_ids
-                    if (!Array.isArray(iderisIds)) {
-                      iderisIds = []
-                    }
-                    let lastIderisOrder
-                    data.result.forEach(iderisOrder => {
-                      const { id } = iderisOrder
-                      if ((!lastId || lastId < id) && iderisIds.indexOf(String(id)) === -1) {
-                        iderisIds.push(String(id))
-                        if (!lastIderisOrder || lastIderisOrder.id < id) {
-                          lastIderisOrder = iderisOrder
+                    const iderisUpdates = []
+                    data.result
+                      .sort((a, b) => {
+                        return a.dataHora < b.dataHora
+                          ? -1
+                          : a.dataHora > b.dataHora ? 1 : 0
+                      })
+                      .forEach(iderisUpdate => {
+                        const { dataHora, idInternoProduto } = iderisUpdate
+                        if (
+                          lastDate > dataHora ||
+                          (lastDate === dataHora && idInternoProduto === lastId)
+                        ) {
+                          return
                         }
+                        const savedUpdateById = iderisUpdates.find(({ idInternoProduto }) => {
+                          return idInternoProduto === iderisUpdate.idInternoProduto
+                        })
+                        if (!savedUpdateById) {
+                          iderisUpdates.push(iderisUpdate)
+                        } else if (savedUpdateById.dataHora <= dataHora) {
+                          Object.assign(savedUpdateById, iderisUpdate)
+                        }
+                      })
+
+                    let lastIderisOrder
+                    for (let i = 0; i < iderisUpdates.length && i < 20; i++) {
+                      const { skuPrincipal, qtdeAtual } = iderisUpdates[i]
+                      try {
+                        const item = fetchItemBySku(storeId, skuPrincipal)
+                        if (item) {
+                          const variation = item.variations && item.variations
+                            .find(({ sku }) => sku === skuPrincipal)
+                          const endpoint = variation
+                            ? `/products/${item._id}/variations/${variation._id}`
+                            : `/products/${item._id}`
+                          await ecomClient.store({
+                            url: `${endpoint}/quantity.json`,
+                            method: 'put',
+                            data: {
+                              quantity: qtdeAtual
+                            }
+                          })
+                          console.log(`> #${storeId} sync SKU ${skuPrincipal}`)
+                          lastIderisOrder = iderisUpdates[i]
+                        }
+                      } catch (err) {
+                        console.error(err)
+                        i = 999
                       }
-                    })
-                    if (iderisIds.length) {
-                      const promise = iderisIds.length >= 7
-                        ? queueImportOrders({ appSdk, storeId }, iderisIds)
-                        : updateSavedOrders({ appSdk, storeId }, ideris, iderisIds)
-                      return promise.then(() => documentRef.set(lastIderisOrder))
-                    } else {
-                      return updateSavedOrders({ appSdk, storeId }, ideris)
+                    }
+
+                    if (iderisUpdates.length) {
+                      return documentRef.set(lastIderisOrder)
                     }
                   }
                 })
@@ -78,7 +143,7 @@ const fetchNewIderisOrders = ({ appSdk, storeId }) => {
             .catch(err => {
               const { response, config } = err
               if (response && response.status === 401 && config && config.url.endsWith('/Login')) {
-                console.log(`> Unauthorized Ideris token #${storeId}  ${iderisLoginToken}`)
+                console.log(`> Unauthorized Ideris token #${storeId} ${iderisLoginToken}`)
               } else {
                 console.error(err)
               }
@@ -89,87 +154,13 @@ const fetchNewIderisOrders = ({ appSdk, storeId }) => {
   })
 }
 
-const updateSavedOrders = ({ appSdk, storeId }, ideris, iderisIds = []) => {
-  return firestore()
-    .collection('ideris_orders')
-    .where('storeId', '==', storeId).orderBy('updatedAt', 'asc').limit(20).get()
-
-    .then(querySnapshot => {
-      const updateIderisIds = []
-      querySnapshot.forEach(documentSnapshot => {
-        const { iderisOrder } = documentSnapshot.data()
-        const timestamp = Date.now()
-        const orderUpdateTime = new Date(iderisOrder.data).getTime()
-        if (
-          iderisOrder &&
-          iderisOrder.id &&
-          timestamp - orderUpdateTime <= 60 * 24 * 60 * 60 * 1000
-        ) {
-          const id = String(iderisOrder.id)
-          if (
-            iderisIds.indexOf(id) === -1 &&
-            updateIderisIds.indexOf(id) === -1 &&
-            timestamp - orderUpdateTime >= 10 * 60 * 1000
-          ) {
-            updateIderisIds.push(id)
-          }
-        } else {
-          documentSnapshot.ref.delete().catch(console.error)
-        }
-      })
-
-      if (updateIderisIds.length) {
-        return ideris.axios.get(`/Pedido?ids=${updateIderisIds.join(',')}`)
-          .then(({ data }) => {
-            if (data && Array.isArray(data.result)) {
-              const promises = []
-              let countUpdateIds = 0
-              data.result.forEach(({ id, status }) => {
-                const promise = firestore().doc(`ideris_orders/${storeId}_${id}`)
-                  .get().then(documentSnapshot => {
-                    if (
-                      documentSnapshot.exists &&
-                      documentSnapshot.get('iderisOrder.status') === status
-                    ) {
-                      return null
-                    }
-                    if (countUpdateIds < 7) {
-                      iderisIds.push(String(id))
-                      countUpdateIds++
-                    }
-                    return true
-                  })
-                promises.push(promise)
-              })
-              return Promise.all(promises)
-            }
-          })
-      }
-      return true
-    })
-
-    .then(() => queueImportOrders({ appSdk, storeId }, iderisIds))
-}
-
-const queueImportOrders = (appSession, iderisIds) => {
-  if (iderisIds && iderisIds.length) {
-    console.log(`> #${appSession.storeId} orders: ${JSON.stringify(iderisIds)}`)
-    return updateAppData(appSession, {
-      importation: {
-        __order_ids: iderisIds
-      }
-    })
-  }
-  return Promise.resolve(null)
-}
-
 module.exports = context => setup(null, true, firestore())
   .then(appSdk => {
     return listStoreIds().then(storeIds => {
       const runAllStores = fn => storeIds
         .sort(() => Math.random() - Math.random())
         .map(storeId => fn({ appSdk, storeId }))
-      return Promise.all(runAllStores(fetchNewIderisOrders))
+      return Promise.all(runAllStores(fetchIderisUpdates))
     })
   })
   .catch(console.error)
