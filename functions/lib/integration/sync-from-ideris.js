@@ -136,7 +136,7 @@ const fetchIderisUpdates = ({ appSdk, storeId }) => {
                       }
                     }
 
-                    if (iderisUpdates.length) {
+                    if (lastIderisOrder) {
                       return documentRef.set(lastIderisOrder)
                     }
                   }
