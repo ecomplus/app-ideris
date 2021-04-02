@@ -80,6 +80,7 @@ const fetchIderisUpdates = ({ appSdk, storeId }) => {
 
               return ideris.axios.get('/MovimentoProduto?horasRetroativas=6')
                 .then(({ data }) => {
+                  console.log(`> #${storeId} sync ${JSON.stringify(data)}`)
                   if (data && Array.isArray(data.result)) {
                     const iderisUpdates = []
                     data.result
