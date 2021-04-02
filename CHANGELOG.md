@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.13](https://github.com/ecomplus/application-starter/compare/v1.0.12...v1.0.13) (2021-04-02)
+
+
+### Bug Fixes
+
+* **sync-from-ideris:** must await find item by sku response to proceed ([4f108ca](https://github.com/ecomplus/application-starter/commit/4f108cafbc209a6b75d7f94927a5dc920235ff09))
+* **sync-from-ideris:** properly send put request to update sku quantity ([89bf5d9](https://github.com/ecomplus/application-starter/commit/89bf5d91a8af0eb7333166f172d87a36657dbef1))
+* **sync-from-ideris:** try to set firestore document if `lastIderisOrder` only ([0fa1cb3](https://github.com/ecomplus/application-starter/commit/0fa1cb38b97ad1285d74296b971b922418c83fd5))
+
 ### [1.0.12](https://github.com/ecomplus/application-starter/compare/v1.0.11...v1.0.12) (2021-04-02)
 
 
