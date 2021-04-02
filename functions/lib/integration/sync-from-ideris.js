@@ -112,17 +112,20 @@ const fetchIderisUpdates = ({ appSdk, storeId }) => {
                       try {
                         const item = fetchItemBySku(storeId, skuPrincipal)
                         if (item) {
+                          let quantity = parseInt(qtdeAtual, 10)
+                          if (!quantity || quantity < 0) {
+                            quantity = 0
+                          }
                           const variation = item.variations && item.variations
                             .find(({ sku }) => sku === skuPrincipal)
-                          const endpoint = variation
-                            ? `/products/${item._id}/variations/${variation._id}`
-                            : `/products/${item._id}`
+                          let endpoint = `/products/${item._id}`
+                          if (variation) {
+                            endpoint += `/variations/${variation._id}`
+                          }
                           await ecomClient.store({
                             url: `${endpoint}/quantity.json`,
                             method: 'put',
-                            data: {
-                              quantity: qtdeAtual
-                            }
+                            data: { quantity }
                           })
                           console.log(`> #${storeId} sync SKU ${skuPrincipal}`)
                           lastIderisOrder = iderisUpdates[i]
