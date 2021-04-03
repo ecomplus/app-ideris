@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.14](https://github.com/ecomplus/application-starter/compare/v1.0.13...v1.0.14) (2021-04-03)
+
+
+### Bug Fixes
+
+* **sync-from-ideris:** no need to parse stores `ideris_last_update` 'dataHora' to Date ([e812937](https://github.com/ecomplus/application-starter/commit/e8129378e2427d7a536b001ffd2079bd775b33ef))
+
 ### [1.0.13](https://github.com/ecomplus/application-starter/compare/v1.0.12...v1.0.13) (2021-04-02)
 
 
