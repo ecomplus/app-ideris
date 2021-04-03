@@ -130,8 +130,8 @@ const fetchIderisUpdates = ({ appSdk, storeId }) => {
                               endpoint += '/quantity.json'
                               await appSdk.apiRequest(storeId, endpoint, 'PUT', { quantity }, auth)
                               console.log(`> #${storeId} updated SKU '${skuPrincipal}'`)
-                              lastIderisOrder = iderisUpdates[i]
                             }
+                            lastIderisOrder = iderisUpdates[i]
                           } catch (err) {
                             console.error(err)
                             i = 999
