@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.16](https://github.com/ecomplus/application-starter/compare/v1.0.15...v1.0.16) (2021-04-13)
+
+
+### Bug Fixes
+
+* **sync-from-ideris:** save last ideris sku right after item being properly handled (await) ([04e821f](https://github.com/ecomplus/application-starter/commit/04e821f121713fe0e383068000504e62c5a3517f))
+
 ### [1.0.15](https://github.com/ecomplus/application-starter/compare/v1.0.14...v1.0.15) (2021-04-13)
 
 
