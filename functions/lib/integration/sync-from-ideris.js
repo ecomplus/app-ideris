@@ -128,10 +128,10 @@ const fetchIderisUpdates = ({ appSdk, storeId }) => {
                               }
                               endpoint += '/quantity.json'
                               await appSdk.apiRequest(storeId, endpoint, 'PUT', { quantity }, auth)
-                              documentRef.set(iderisUpdates[i])
+                              await documentRef.set(iderisUpdates[i])
                               console.log(`> #${storeId} SKU:${skuPrincipal}`)
                             } else {
-                              documentRef.set(iderisUpdates[i])
+                              await documentRef.set(iderisUpdates[i])
                             }
                           } catch (err) {
                             console.error(err)
