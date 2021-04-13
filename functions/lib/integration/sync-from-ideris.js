@@ -111,7 +111,6 @@ const fetchIderisUpdates = ({ appSdk, storeId }) => {
                       const skus = iderisUpdates.map(({ skuPrincipal }) => skuPrincipal).join()
                       console.log(`> #${storeId} sync SKUs '${skus}'`)
                       return appSdk.getAuth(storeId).then(async auth => {
-                        let lastIderisOrder
                         for (let i = 0; i < iderisUpdates.length && i < 20; i++) {
                           const { skuPrincipal, qtdeAtual } = iderisUpdates[i]
                           try {
@@ -129,17 +128,15 @@ const fetchIderisUpdates = ({ appSdk, storeId }) => {
                               }
                               endpoint += '/quantity.json'
                               await appSdk.apiRequest(storeId, endpoint, 'PUT', { quantity }, auth)
-                              console.log(`> #${storeId} updated SKU '${skuPrincipal}'`)
+                              documentRef.set(iderisUpdates[i])
+                              console.log(`> #${storeId} SKU:${skuPrincipal}`)
+                            } else {
+                              documentRef.set(iderisUpdates[i])
                             }
-                            lastIderisOrder = iderisUpdates[i]
                           } catch (err) {
                             console.error(err)
                             i = 999
                           }
-                        }
-
-                        if (lastIderisOrder) {
-                          return documentRef.set(lastIderisOrder)
                         }
                       })
                     }
