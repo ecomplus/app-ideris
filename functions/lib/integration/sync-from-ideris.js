@@ -72,15 +72,17 @@ const fetchIderisUpdates = ({ appSdk, storeId }) => {
             .then(() => documentRef.get())
 
             .then(documentSnapshot => {
-              let lastDate, lastId
+              let lastDate, lastIds
               if (documentSnapshot.exists) {
                 lastDate = documentSnapshot.get('dataHora')
-                lastId = documentSnapshot.get('idInternoProduto')
+                lastIds = documentSnapshot.get('__lastIds') || [documentSnapshot.get('idInternoProduto')]
+              } else {
+                lastIds = []
               }
 
               return ideris.axios.get('/MovimentoProduto?horasRetroativas=6')
                 .then(({ data }) => {
-                  console.log(`> #${storeId} sync ${JSON.stringify(data)}`)
+                  // console.log(`> #${storeId} sync ${JSON.stringify(data)}`)
                   if (data && Array.isArray(data.result)) {
                     const iderisUpdates = []
                     data.result
@@ -93,7 +95,7 @@ const fetchIderisUpdates = ({ appSdk, storeId }) => {
                         const { dataHora, idInternoProduto } = iderisUpdate
                         if (
                           lastDate > dataHora ||
-                          (lastDate === dataHora && idInternoProduto === lastId)
+                          (lastDate === dataHora && lastIds.includes(idInternoProduto))
                         ) {
                           return
                         }
@@ -112,7 +114,13 @@ const fetchIderisUpdates = ({ appSdk, storeId }) => {
                       console.log(`> #${storeId} sync SKUs '${skus}'`)
                       return appSdk.getAuth(storeId).then(async auth => {
                         for (let i = 0; i < iderisUpdates.length && i < 20; i++) {
-                          const { skuPrincipal, qtdeAtual } = iderisUpdates[i]
+                          const { skuPrincipal, qtdeAtual, idInternoProduto } = iderisUpdates[i]
+                          lastIds.push(idInternoProduto)
+                          const iderisLastUpdate = {
+                            __lastIds: lastIds,
+                            ...iderisUpdates[i]
+                          }
+
                           try {
                             const item = await fetchItemBySku(storeId, skuPrincipal)
                             if (item) {
@@ -128,10 +136,10 @@ const fetchIderisUpdates = ({ appSdk, storeId }) => {
                               }
                               endpoint += '/quantity.json'
                               await appSdk.apiRequest(storeId, endpoint, 'PUT', { quantity }, auth)
-                              await documentRef.set(iderisUpdates[i])
+                              await documentRef.set(iderisLastUpdate)
                               console.log(`> #${storeId} SKU:${skuPrincipal}`)
                             } else {
-                              await documentRef.set(iderisUpdates[i])
+                              await documentRef.set(iderisLastUpdate)
                             }
                           } catch (err) {
                             console.error(err)
