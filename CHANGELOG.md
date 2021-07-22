@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.18](https://github.com/ecomplus/application-starter/compare/v1.0.17...v1.0.18) (2021-07-22)
+
+
+### Bug Fixes
+
+* **webhook:** prevent error with undefined action queue ([58165ef](https://github.com/ecomplus/application-starter/commit/58165ef57dbc7814d70c106ff8e0bd065ce9ced5))
+
 ### [1.0.17](https://github.com/ecomplus/application-starter/compare/v1.0.16...v1.0.17) (2021-07-20)
 
 
