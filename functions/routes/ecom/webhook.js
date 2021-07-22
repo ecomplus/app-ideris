@@ -120,27 +120,29 @@ exports.post = ({ appSdk, admin }, req, res) => {
                     const action = actions[i]
                     if (typeof integrationConfig[action] === 'object' && integrationConfig[action]) {
                       const queue = Object.keys(integrationConfig[action])[0]
-                      const handler = integrationHandlers[action][queue.startsWith('__') ? queue.slice(2) : queue]
-                      const ids = integrationConfig[action][queue]
-                      if (Array.isArray(ids) && handler) {
-                        const nextId = ids[0]
-                        const key = `${action}/${queue}/${nextId}`
-                        if (
-                          typeof nextId === 'string' &&
-                          nextId.length &&
-                          runningKey !== key
-                        ) {
-                          console.log(`> Starting ${key}`)
-                          documentRef.set({ key, count: runningCount + 1 })
-                            .catch(console.error)
+                      if (queue) {
+                        const handler = integrationHandlers[action][queue.startsWith('__') ? queue.slice(2) : queue]
+                        const ids = integrationConfig[action][queue]
+                        if (Array.isArray(ids) && handler) {
+                          const nextId = ids[0]
+                          const key = `${action}/${queue}/${nextId}`
+                          if (
+                            typeof nextId === 'string' &&
+                            nextId.length &&
+                            runningKey !== key
+                          ) {
+                            console.log(`> Starting ${key}`)
+                            documentRef.set({ key, count: runningCount + 1 })
+                              .catch(console.error)
 
-                          return handler(
-                            { appSdk, storeId, auth },
-                            iderisLoginToken,
-                            { action, queue, nextId, key, documentRef },
-                            appData,
-                            canCreateNew
-                          ).then(() => ({ appData, action, queue }))
+                            return handler(
+                              { appSdk, storeId, auth },
+                              iderisLoginToken,
+                              { action, queue, nextId, key, documentRef },
+                              appData,
+                              canCreateNew
+                            ).then(() => ({ appData, action, queue }))
+                          }
                         }
                       }
                     }
