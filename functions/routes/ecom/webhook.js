@@ -171,7 +171,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
               // trigger ignored by app configuration
               res.send(ECHO_SKIP)
             } else {
-              // console.error(err)
+              console.error(err)
               // request to Store API with error response
               // return error status code
               res.status(500)
